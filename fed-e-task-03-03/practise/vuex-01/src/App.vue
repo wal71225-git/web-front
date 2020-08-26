@@ -10,12 +10,24 @@
       <!-- 如果页面已经有相同属性，mapState使用对象方法传值 -->
       <h1>count: {{num}}</h1>
       <h1>message: {{msg}}</h1>
+      <!-- getter基本使用 -->
+      <h1>{{$store.getters.reversMsg}}</h1>
+        <!-- mapGetters基本使用 -->
+      <h1>{{reversMsg}}</h1>
+      <!-- mutations获取状态变化后的数据 -->
+      <button @click="$store.commit('addCount',2)">添加</button>
+      <!-- 使用mapMutations获取状态变化后的数据 -->
+      <button @click="addCount(3)">添加</button>
+      <!-- action获取状态变化后的数据 -->
+      <button @click="$store.dispatch('asyncAddCount', 5)">添加</button>
+      <!-- 使用mapActions获取状态变化后的数据 -->
+      <button @click="asyncAddCount(5)">添加</button>
     </div>
     <router-view/>
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -31,7 +43,12 @@ export default {
     //   return this.$store.state.message
     // }
     // ...mapState(['count', 'message'])
-    ...mapState({ num: 'count', msg: 'message' })
+    ...mapState({ num: 'count', msg: 'message' }),
+    ...mapGetters(['reversMsg'])
+  },
+  methods: { // 在方法中使用mapMutations，mapMutations同样有数组和对象两种方式
+    ...mapMutations(['addCount']),
+    ...mapActions(['asyncAddCount'])
   }
 }
 </script>
