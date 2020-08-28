@@ -22,6 +22,14 @@
       <button @click="$store.dispatch('asyncAddCount', 5)">添加</button>
       <!-- 使用mapActions获取状态变化后的数据 -->
       <button @click="asyncAddCount(5)">添加</button>
+      <!-- 使用modules -->
+      <h1>products: {{$store.state.product.products}}</h1>
+      <!-- 使用moudules提交mutations -->
+      <button @click="$store.commit('setProducts',[])">清空产品</button>
+      <!-- 使用modules 命名空间-->
+      <h1>products: {{products}}</h1>
+      <!-- 使用moudules命名空间提交mutations -->
+      <button @click="setProducts([])">清空产品</button>
     </div>
     <router-view/>
   </div>
@@ -44,11 +52,13 @@ export default {
     // }
     // ...mapState(['count', 'message'])
     ...mapState({ num: 'count', msg: 'message' }),
-    ...mapGetters(['reversMsg'])
+    ...mapGetters(['reversMsg']),
+    ...mapState('product', ['products'])
   },
   methods: { // 在方法中使用mapMutations，mapMutations同样有数组和对象两种方式
     ...mapMutations(['addCount']),
-    ...mapActions(['asyncAddCount'])
+    ...mapActions(['asyncAddCount']),
+    ...mapMutations('product', ['setProducts'])
   }
 }
 </script>
