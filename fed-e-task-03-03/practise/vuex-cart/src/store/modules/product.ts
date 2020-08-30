@@ -11,8 +11,9 @@ const mutations = {
 }
 const actions = {
   async getProducts (context:any) {
-    const { data } = await request.getProducts;
-    context.commit('setProducts', data)
+    const result =  await request.getProducts();
+    console.log('result', result)
+    context.commit('setProducts', (result as any).data)
   }
 }
 export default {

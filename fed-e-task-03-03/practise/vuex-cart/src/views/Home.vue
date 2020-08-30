@@ -1,13 +1,17 @@
 <template>
   <div>
     <div class="title">Vuex- 购物车</div>
-    <router-view></router-view>
+    <product></product>
   </div>
 </template>
 <script>
-export default {
-  name: "Home",
-};
+  import product from '../views/products';
+  export default {
+    name: "Home",
+    component: {
+      product
+    }
+  };
 </script>
 <style>
   .el-breadcrumb__inner,.el-breadcrumb__inner.is-link, .product_list {

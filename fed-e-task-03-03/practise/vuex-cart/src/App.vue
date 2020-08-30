@@ -5,7 +5,7 @@
 </template>
 <style>
   #app {
-  width: 980px;
+  width: 80%;
   margin: 0 auto;
   padding: 10px;
 }

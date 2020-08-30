@@ -21,8 +21,18 @@
 import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
   name: "Home",
-  ...mapState：
-};
+  computed: {
+    ...mapState('product', ['products'])
+  },
+  mounted () {
+    console.log(111111)
+    this.getProducts()
+  },
+  methods: {
+    ...mapActions('product',['getProducts']),
+    ...mapMutations('cart', ['addTtoCart'])
+  }
+}
 </script>
 <style>
   .el-breadcrumb__inner,.el-breadcrumb__inner.is-link, .product_list {
