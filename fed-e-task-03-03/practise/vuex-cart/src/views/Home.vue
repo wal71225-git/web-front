@@ -1,19 +1,27 @@
 <template>
-  <div>
+<div>
+  <div class="home-main">
     <div class="title">Vuex- 购物车</div>
-    <product></product>
+    <pop-cart></pop-cart>
   </div>
+  <router-view />
+</div>
 </template>
 <script>
-  import product from '../views/products';
+  import popCart from '../components/pop-cart';
   export default {
     name: "Home",
-    component: {
-      product
+    components: {
+      popCart
     }
   };
 </script>
 <style>
+  .home-main {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
   .el-breadcrumb__inner,.el-breadcrumb__inner.is-link, .product_list {
     color:rgb(233, 215, 184);
   }

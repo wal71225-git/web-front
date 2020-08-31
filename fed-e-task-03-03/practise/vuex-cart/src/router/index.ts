@@ -8,7 +8,15 @@ const routes: Array<RouteConfig> = [
   {
     path: "/",
     name: "Home",
-    component: Home
+    component: Home,
+    children: [
+      {
+        path: '/product-list',
+        name: 'product-list',
+        component: () =>
+        import(/* webpackChunkName: "about" */ "../views/products.vue")
+     }
+   ]
   },
   {
     path: "/about",
@@ -18,6 +26,12 @@ const routes: Array<RouteConfig> = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
+  },
+  {
+    path: "/cart",
+    name: "cart",
+    component: () =>
+      import(/* webpackChunkName: "cart" */ "../views/cart.vue")
   },
   {
     path: "/products",
