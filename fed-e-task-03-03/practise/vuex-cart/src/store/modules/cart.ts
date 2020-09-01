@@ -15,7 +15,7 @@ const mutations = {
   addToCart(state:any, product:any) { 
     // 1.cartProducts如果没有该商品，把该商品添加到数组，并添加属性count,isChecked,totalPrice
     // 2.cartProducts有该商品，让商品的数量加1，计算小计
-    const prod = state.cartProducts.find((item: any) => item.id === product.id)
+    let prod = state.cartProducts.find((item: any) => item.id === product.id)
     if (prod) {
       prod.count++
       prod.isChecked = true
@@ -32,6 +32,15 @@ const mutations = {
   deleteFromCart (state:any, productId:number) {
     const index = state.cartProducts.findIndex( (item:any) => item.id === productId)
     index !== -1 && state.cartProducts.splice(index, 1)
+  },
+  updateAllProductChecked (state:any, isChecked:boolean) {
+    state.cartProducts.forEach((product:any) => {
+      product.isChecked = isChecked
+    })
+  },
+  updateProductChecked (state:any, product:any) {
+    let prod = state.cartProducts.find((prod:any) => prod.id === product.id)
+    prod && (prod.isChecked = product.isChecked)
   }
 }
 const actions = {}
