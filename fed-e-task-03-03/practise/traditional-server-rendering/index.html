@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8">
+        <title>传统服务端渲染 </title>
+    </head>
+    <body>
+        <h1>{{ title }}</h1>
+        <!-- 循环 -->
+        <ul>
+            {{ each posts }}
+            <li>{{ $value.title}}<li>
+             {{ /each }}   
+        </ul>
+    </body>
+</html>
