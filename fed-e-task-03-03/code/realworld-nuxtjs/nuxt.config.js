@@ -24,6 +24,26 @@ module.exports = {
             path: '/reginster',
             name: 'reginster',
             component: resolve(__dirname, 'pages/login/')
+          },
+          {
+            path: '/profile/:username',
+            name: 'profile',
+            component: resolve(__dirname, 'pages/profile/')
+          },
+          {
+            path: '/setting',
+            name: 'setting',
+            component: resolve(__dirname, 'pages/setting/')
+          },
+          {
+            path: '/editor',
+            name: 'editor',
+            component: resolve(__dirname, 'pages/editor/')
+          },
+          {
+            path: '/article',
+            name: 'article',
+            component: resolve(__dirname, 'pages/article/')
           }
         ]
        }
