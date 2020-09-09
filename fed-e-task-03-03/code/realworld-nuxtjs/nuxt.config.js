@@ -11,9 +11,19 @@ module.exports = {
         component: resolve(__dirname, 'pages/layout/'),
         children: [
           {
-            path: '',
+            path: '', // 默认子路由
             name: 'home',
             component: resolve(__dirname, 'pages/home/')
+          },
+          {
+            path: '/login',
+            name: 'login',
+            component: resolve(__dirname, 'pages/login/')
+          },
+          {
+            path: '/reginster',
+            name: 'reginster',
+            component: resolve(__dirname, 'pages/login/')
           }
         ]
        }
