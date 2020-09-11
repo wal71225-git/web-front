@@ -7,21 +7,21 @@
         <ul class="nav navbar-nav pull-xs-right">
           <li class="nav-item">
             <!-- Add "active" class when you're on that page" -->
-            <a class="nav-link active" href="">Home</a>
+            <nuxt-link class="nav-link" to="/" exact>Home</nuxt-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="">
-              <i class="ion-compose"></i>&nbsp;New Post
-            </a>
+            <nuxt-link class="nav-link" to="/editor" > <i class="ion-compose"></i>&nbsp;New Post </nuxt-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="">
-              <i class="ion-gear-a"></i>&nbsp;Settings
-            </a>
+            <nuxt-link class="nav-link" to="/setting" > <i class="ion-gear-a"></i>&nbsp;Settings </nuxt-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="">Sign up</a>
+            <nuxt-link class="nav-link" to="/login" > Sign in </nuxt-link>
           </li>
+           <li class="nav-item">
+            <nuxt-link class="nav-link" to="/reginster" > Sign Up </nuxt-link>
+          </li>
+          <li class="nav-item"> <nuxt-link class="nav-link" to="/profile/123"> <img class="user-pic" src="http://toutiao.meiduo.site/FtNcS8sKFSYQbtBbd40eFTL6lAs_"> lpz999 </nuxt-link> </li>
         </ul>
       </div>
     </nav>
@@ -41,7 +41,11 @@
  </div> 
 </template> 
  <script> 
+  import { mapState } from 'vuex'
    export default { 
-     name: 'LayoutIndex' 
+     name: 'LayoutIndex',
+     computed: {
+       ...mapState(['user'])
+     }
   }
 </script>
