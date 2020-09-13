@@ -29,10 +29,11 @@
 </template>
 <script>
 export default {
+  middleware: 'auth', // 路由中间件，在路由匹配组件渲染之前，会先执行路由中间件进行处理
   name: 'EditorIndex',  
   data () {
     return {
-    }
+    } 
   }
 }
 </script>
