@@ -41,7 +41,15 @@
              <span @click="$router.push({ name: 'article', params: { slug: article.slug } })" >Read more...</span> 
            </nuxt-link>
         </div>
-
+        <!-- 分页列表start -->
+        <nav> 
+          <ul class="pagination"> 
+            <li class="page-item" :class="{active: item === page }" v-for="item in totalPage" :key="item" > 
+                <nuxt-link class="page-link" :to="{name: 'home', query: { page: item}}" >{{ item }}</nuxt-link> 
+            </li> 
+          </ul> 
+        </nav>
+        <!-- 分页列表end -->
       </div>
 
       <div class="col-md-3">
@@ -63,24 +71,30 @@
 
     </div>
   </div>
-
 </div>
 </template>
 <script>
   import article from '@/api/article.js'
   export default {
     name: 'HomeIndex',
-    async asyncData() {
-      const page = 1 // 想要查询的页数
+    async asyncData({ query }) {
+      const page = Number.parseInt(query.page || 1) // 想要查询的页数
       const limit = 5 // 每页多少数据
       const {data} = await article.getArticles({
         limit,
         offset: (page-1) * limit
       })
       return {
+        limit, 
+        page,
         articles: data.articles,
         articlesCount: data.articlesCount
       }
+    },
+    watchQuery: ['page'],
+    computed: {
+      totalPage () { 
+        return Math.ceil(this.articlesCount / this.limit) }
     }
   }
 </script>
