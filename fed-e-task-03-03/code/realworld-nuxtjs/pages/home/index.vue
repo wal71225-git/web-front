@@ -10,7 +10,6 @@
 
   <div class="container page">
     <div class="row">
-
       <div class="col-md-9">
         <div class="feed-toggle">
           <ul class="nav nav-pills outline-active">
@@ -28,7 +27,6 @@
             </li>
           </ul>
         </div>
-
         <div class="article-preview" v-for="article in articles" :key="article.slug">
           <div class="article-meta">
             <nuxt-link :to="'/profile/'+article.author.username">
@@ -93,8 +91,9 @@
       // 没有关联的异步任务，使用Promise.all做优化
       const tab = query.tab || "global_feed"  // tab页面
       const tag = query.tag // tag
+      const loadArticles = tab === "your_feed" ? article.getYourFeedArticles : article.getArticles; 
       const [articleRes, tagRes] = await Promise.all([
-          article.getArticles({
+          loadArticles({
             limit,
             offset: (page-1) * limit,
             tag

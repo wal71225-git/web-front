@@ -6,5 +6,15 @@ export default {
       url: '/api/articles',
       params
     })
+  },
+  getYourFeedArticles(params = {}) {
+    return request({
+      method: 'get',
+      url: '/api/articles/feed',
+      params,
+      headers: {
+        auth
+      }
+    })
   }
 }
