@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@/api/index'
 export default {
   login(data = {}) {
     return request({

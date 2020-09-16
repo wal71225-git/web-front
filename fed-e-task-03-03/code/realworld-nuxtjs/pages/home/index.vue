@@ -36,9 +36,9 @@
               <nuxt-link class="author" :to="`/profile/${article.author.username}`" > 
               {{ article.author.username }} 
               </nuxt-link>
-              <span class="date">{{ article.createdAt }}</span>
+              <span class="date">{{ article.createdAt | date('MMM DD, YYYY') }}</span>
             </div>
-            <button class="btn btn-outline-primary btn-sm pull-xs-right" :class="{ active: article.favorited }">
+            <button class="btn btn-outline-primary btn-sm pull-xs-right" @click="onFavorite(article)" :class="{ active: article.favorited }">
               <i class="ion-heart"></i> {{ article.favoritesCount }}
             </button>
           </div>
@@ -75,7 +75,7 @@
 </div>
 </template>
 <script>
-  import article from '@/api/article.js'
+  import articleApi from '@/api/article'
   import tagApi from '@/api/tag'
   import { mapState } from 'vuex'
   export default {
@@ -91,7 +91,7 @@
       // 没有关联的异步任务，使用Promise.all做优化
       const tab = query.tab || "global_feed"  // tab页面
       const tag = query.tag // tag
-      const loadArticles = tab === "your_feed" ? article.getYourFeedArticles : article.getArticles; 
+      const loadArticles = tab === "your_feed" ? articleApi.getYourFeedArticles : articleApi.getArticles; 
       const [articleRes, tagRes] = await Promise.all([
           loadArticles({
             limit,
@@ -100,7 +100,11 @@
           }),
           tagApi.getTags()
       ])
+      //console.log(articleRes.data)
       const { articles, articlesCount } = articleRes.data
+      articles.forEach(article => { // 给每个点赞按钮添加禁用属性
+        article.favoriteDisabled = false
+      });
       const { tags } = tagRes.data;
       return {
         limit, 
@@ -112,11 +116,28 @@
         articlesCount // 文章总数量
       }
     },
-    watchQuery: ['page','tag'],
+    watchQuery: ['page','tag','tab'],
     computed: {
       ...mapState(['user']),
       totalPage () { 
         return Math.ceil(this.articlesCount / this.limit) }
+    },
+    methods: {
+      // 点赞或取消点赞
+      async onFavorite(article) {
+        article.favoriteDisabled = true
+        // 如果已点赞再次取消点赞
+        if(article.favorited) {
+          await articleApi.deleteFavorite(article.slug) // 取消点赞
+          article.favorited = false // 取消点赞标识
+          article.favoritesCount -= 1 // 减少点赞数量
+        }else {
+          await articleApi.addFavorite(article.slug) // 添加点赞
+          article.favorited = true
+          article.favoritesCount += 1
+        }
+        article.favoriteDisabled = false
+      }
     }
   }
 </script>
