@@ -1,0 +1,43 @@
+
+<template>
+      <div class="article-meta">
+        <nuxt-link :to="{name:'profile',query: {username:article.author.username}}">
+          <img :src="article.author.image" />
+        </nuxt-link>
+        <div class="info">
+        <a href="" class="author">{{article.author.username}}</a>
+        <span class="date">{{article.createdAt | date('MMM DD, YYYY')}}</span>
+        </div>
+        <button class="btn btn-sm btn-outline-secondary">
+        <i class="ion-plus-round"></i>
+        &nbsp;
+        Follow Eric Simons <span class="counter">(10)</span>
+        </button>
+        &nbsp;&nbsp;
+        <button class="btn btn-sm btn-outline-primary">
+        <i class="ion-heart"></i>
+        &nbsp;
+        Favorite Post <span class="counter">(29)</span>
+        </button>
+    </div>
+</template>
+
+<script>
+export default {
+  name: 'ArticleMetaIndex',
+  props: {
+    article: {
+      type: Object,
+      require: true
+    }
+  },
+  data() {
+    return {
+      
+    }
+  },
+  mounted() {
+    console.log(this.article)
+  },
+}
+</script>
