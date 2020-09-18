@@ -35,5 +35,20 @@ export default {
       method: 'GET',
       url: `/api/articles/${slug}`
     })
+  },
+  // 获取文章评论
+  getComments(slug) {
+    return request({
+      method: 'GET',
+      url: `/api/articles/${slug}/comments`
+    })
+  },
+  // 添加文章评论
+  addComment(data) {
+    return request({
+      method: 'POST',
+      url: `/api/articles/${data.slug}/comments`,
+      data
+    })
   }
 }

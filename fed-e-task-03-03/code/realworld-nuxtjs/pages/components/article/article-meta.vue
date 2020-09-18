@@ -35,9 +35,6 @@ export default {
     return {
       
     }
-  },
-  mounted() {
-    console.log(this.article)
-  },
+  }
 }
 </script>
