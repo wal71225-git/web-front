@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-  import setps from '../components/steps'
+  import setps from '../components/steps/steps'
   export default {
     name: 'stepsTest',
     data() {
