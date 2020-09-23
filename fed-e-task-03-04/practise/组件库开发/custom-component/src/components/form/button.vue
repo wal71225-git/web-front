@@ -1,8 +1,16 @@
 <template>
-  <div></div>
+  <div>
+    <button @click="handleClick"><slot></slot></button>
+  </div>
 </template>
 <script>
   export default {
-    name: 'LgButton'
+    name: 'LgButton',
+    methods: {
+      handleClick (event) {
+        this.$emit('click',event)
+        event.preventDefault()
+      }
+    },
   }
 </script>

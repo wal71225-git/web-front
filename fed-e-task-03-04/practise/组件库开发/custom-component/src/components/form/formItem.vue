@@ -12,17 +12,25 @@
 <script>
   export default {
     name: 'LgFormItem',
+    inject: ['form'],
     props: {
       label: {
         type: String
       },
       prop: {  
         type: String
-      }
+      } 
     },
     data() {
       return {
         errMsg: ''
+      }
+    },
+    methods: {
+      validate () {
+        if (!this.prop) return
+        const value = this.form.model[this.prop]
+        const rules = this.form.rules[this.prop]
       }
     },
   }
