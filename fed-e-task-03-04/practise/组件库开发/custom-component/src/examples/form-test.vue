@@ -1,6 +1,6 @@
 <template>
   <div>
-    <lg-form>
+    <lg-form ref="form" :model="user" :rules="rules">
       <lg-form-item label="用户名" prop="username">
         <!-- <lg-input v-model="user.username" placeholder="请输入用户名"></lg-input> -->
         <lg-input :value="user.username" @input="user.username = $event" placeholder="请输入用户名"></lg-input>
@@ -26,6 +26,25 @@
         user: {
           username: '',
           password: ''
+        },
+        rules: {
+          username: [
+            {
+            required: true,
+            message: '请输入用户名'
+           }
+          ],
+          password: [
+            {
+              required: true,
+              message: '请输入密码'
+            },
+            {
+              min: 6,
+              max: 12,
+              message: '请输入6-12位密码'
+            }
+          ]
         }
       }
     },
@@ -37,7 +56,9 @@
     },
     methods: {
      login () {
-
+       this.$refs.form.validate(validate => {
+         console.log(validate)
+       })
      } 
     }
   }
