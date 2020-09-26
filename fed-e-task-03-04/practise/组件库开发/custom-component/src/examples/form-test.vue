@@ -57,7 +57,12 @@
     methods: {
      login () {
        this.$refs.form.validate(validate => {
-         console.log(validate)
+         if (validate) {
+           alert('验证成功')
+         } else {
+           alert('验证失败')
+           return false
+         }
        })
      } 
     }
