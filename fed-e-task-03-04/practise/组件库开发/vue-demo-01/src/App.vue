@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <h3>01-$root</h3>
+    <!-- <h3>01-$root</h3>
     <root></root>
 
     <h3>02-$parent</h3>
-    <parent></parent>
+    <parent></parent> -->
 
 
     <router-view/>
