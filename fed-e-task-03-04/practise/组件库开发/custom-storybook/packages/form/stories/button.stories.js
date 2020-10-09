@@ -1,13 +1,13 @@
 import LyInput from '../'
 // 注册组件
 export default {
-  title: 'LyButton',
+  title: 'LyInput',
   component: LyInput
 }
 // 导出stories
 export const buttonShow = () => ({
   components: { LyInput },
-  template: '<ly-input @click="login">{{content}}</ly-input>',
+  template: '<ly-input :click="login">{{content}}</ly-input>',
   data() {
     return {
       content: '登录'
