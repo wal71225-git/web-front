@@ -9,6 +9,7 @@ const server = express()
  server.use('/dist', express.static('./dist'))
 const isProd = process.env.NODE_ENV === 'production'
 const { createBundleRenderer } = require('vue-server-renderer')
+const setDevServer = require('./build/setup-dev-server')
 // // 构建开发模式前
 // // 引入打包后的服务端资源
 // const serverBundle = require('./dist/vue-ssr-server-bundle.json') 
@@ -32,6 +33,7 @@ if( isProd ) {
 } else {
   // 开发模式 打包构建（客户端 + 服务端） -> 创建渲染器
   // 设置开发模式下服务  传入server实例和回调函数 
+  console.log(111111)
   onReady = setDevServer(server, (serverBundle, template, clientManifest) => {
     // 创建或更新渲染器
     render = createBundleRenderer(serverBundle,{
