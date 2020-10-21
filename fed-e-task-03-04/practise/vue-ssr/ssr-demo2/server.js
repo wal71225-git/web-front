@@ -33,7 +33,6 @@ if( isProd ) {
 } else {
   // 开发模式 打包构建（客户端 + 服务端） -> 创建渲染器
   // 设置开发模式下服务  传入server实例和回调函数 
-  console.log(111111)
   onReady = setDevServer(server, (serverBundle, template, clientManifest) => {
     // 创建或更新渲染器
     render = createBundleRenderer(serverBundle,{

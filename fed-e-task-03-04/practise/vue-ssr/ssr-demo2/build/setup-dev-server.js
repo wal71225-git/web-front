@@ -1,6 +1,7 @@
 const path = require('path') 
 const fs = require('fs')
 const chokidar = require('chokidar')
+const webpack = require('webpack')
 module.exports = (server, cb) => {
   let ready 
   // 声明一个promise 并把resolve赋值给ready,等promise完成，就可以执行render渲染了
@@ -16,7 +17,7 @@ module.exports = (server, cb) => {
     }
   }
   // 监听template构建 --> 调用update --> 更新render渲染器
-  // 获取模板文件地址，并同步读取
+  //  
     const templatePath = path.resolve(__dirname, '../index.template.html')
     template = fs.readFileSync(templatePath, 'utf-8')
     update()
@@ -26,6 +27,15 @@ module.exports = (server, cb) => {
       update()
     })
   // 监听serverBundle构建 --> 调用update --> 更新render渲染器
+  const serverConfig = require('./webpack.server.config') 
+  const serverCompiler = webpack(serverConfig)
+  serverCompiler.watch({}, (err, status) => {
+    if(err) throw err
+    if(status.hasErrors()) return
+    // 更新 Renderer update()
+    serverBundle = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../dist/vue-ssr-server-bundle.json')),'utf-8')
+    update()
+  })
   // 监听clientManifest构建 --> 调用update --> 更新render渲染器
 
   return onReady
