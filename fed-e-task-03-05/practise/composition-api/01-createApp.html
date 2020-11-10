@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    x: {{ position.x }} <br>
+    y: {{ position.y }}
+  </div>
+  <script type="module">
+    /**
+     *1.createApp创建和返回vue实例
+     *2.reactive创建响应式对象
+     */
+    import { createApp, reactive, onMounted, onUnmounted } from './node_modules/vue/dist/vue.esm-browser.js'
+    function userMousePosition () {
+        // 第一个参数props 不能不解构，解构后的对象不是响应式对象
+        // 第二个参数context attrs emit slots
+        const position = reactive({
+          x: 0,
+          y: 0
+        })
+        // 更新鼠标位置
+        const update = e => {
+          position.x = e.pageX
+          position.y = e.pageY
+        }
+        onMounted(() => {
+          window.addEventListener('mousemove', update)
+        })
+        onUnmounted(() => {
+          window.removeEventListener('mousemove', update)
+        })
+        return position
+    }
+    const app = createApp({
+      // data() {
+      //   return {
+      //     position: {
+      //       x: 0,
+      //       y: 0
+      //     }
+      //   }
+      // }
+      // composition Api的入口
+      setup() {
+        // 第一个参数props 不能不解构，解构后的对象不是响应式对象
+        // 第二个参数context attrs emit slots
+        // 使用compositionapi方法提取
+        // const position = reactive({
+        //   x: 0,
+        //   y: 0
+        // })
+        // // 更新鼠标位置
+        // const update = e => {
+        //   position.x = e.pageX
+        //   position.y = e.pageY
+        // }
+        
+        // onMounted(() => {
+        //   window.addEventListener('mousemove', update)
+        // })
+        // onUnmounted(() => {
+        //   window.removeEventListener('mousemove', update)
+        // })
+        const position =  userMousePosition()
+        return {
+          position
+        }
+      }
+    })
+    app.mount('#app')
+  </script>
+</body>
+</html>
