@@ -7,15 +7,21 @@
 </head>
 <body>
   <div id="app">
-    x: {{ position.x }} <br>
-    y: {{ position.y }}
+    <!-- x: {{ position.x }} <br>
+    y: {{ position.y }} -->
+    x: ===={{ x }} <br>
+    y: {{ y }} 
   </div>
   <script type="module">
     /**
      *1.createApp创建和返回vue实例
      *2.reactive创建响应式对象
+     *3.onMounted  onUnmounted 钩子函数 
+     *4.toRefs把对象所有属性转换成响应式对象, 要求传入对象时一个代理对象
+     *5.ref是把基本对象转换成响应式对象
+     *
      */
-    import { createApp, reactive, onMounted, onUnmounted } from './node_modules/vue/dist/vue.esm-browser.js'
+    import { createApp, reactive, onMounted, onUnmounted, toRefs, ref } from './node_modules/vue/dist/vue.esm-browser.js'
     function userMousePosition () {
         // 第一个参数props 不能不解构，解构后的对象不是响应式对象
         // 第二个参数context attrs emit slots
@@ -34,7 +40,7 @@
         onUnmounted(() => {
           window.removeEventListener('mousemove', update)
         })
-        return position
+        return toRefs(position)
     }
     const app = createApp({
       // data() {
@@ -66,9 +72,10 @@
         // onUnmounted(() => {
         //   window.removeEventListener('mousemove', update)
         // })
-        const position =  userMousePosition()
+        const {x, y} =  userMousePosition()
         return {
-          position
+          x,
+          y
         }
       }
     })
