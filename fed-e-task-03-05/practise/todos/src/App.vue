@@ -12,12 +12,12 @@
         @keyup.enter="addTodo"
         >
     </header>
-    <section class="main" v-show="count">
+    <section class="main">
       <input id="toggle-all" class="toggle-all" v-model="allDone" type="checkbox">
       <label for="toggle-all">Mark all as complete</label>
       <ul class="todo-list">
         <li
-          v-for="todo in filteredTodos"
+          v-for="todo in todos"
           :key="todo"
           :class="{ editing: todo === editingTodo, completed: todo.completed }"
         >
@@ -67,8 +67,31 @@
 import './assets/index.css'
 import { ref, computed, onMounted, onUnmounted, watchEffect } from 'vue'
 // 1.添加待办事项
+const useAdd = todos => {
+  const input = ref('')
+  const addTodo = () => {
+    alert(222)
+    const text = input.value && input.value.trim()
+    if(text.length === 0 ) return
+    todos.value.unshift({
+      text,
+      completed: false
+    })
+  }
+  return {
+    input,
+    addTodo
+  }
+}
 export default {
   name: 'App',
+  setup() {
+    const todos = ref([])
+    return {
+      todos,
+      ...useAdd(todos)
+    }
+  },
   components: {
   }
 }
