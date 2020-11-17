@@ -19,17 +19,13 @@
         <li
           v-for="todo in todos"
           :key="todo"
-          :class="{ editing: todo === editingTodo, completed: todo.completed }"
         >
           <div class="view">
             <input class="toggle" type="checkbox" v-model="todo.completed">
             <label @dblclick="editTodo(todo)">{{ todo.text }}</label>
-            <button class="destroy" @click="remove(todo)"></button>
+            <button class="destroy"></button>
           </div>
-          <input
-            class="edit"
-            type="text"
-            v-editing-focus="todo === editingTodo"
+          <input class="edit"
             v-model="todo.text"
             @keyup.enter="doneEdit(todo)"
             @blur="doneEdit(todo)"
@@ -70,14 +66,21 @@ import { ref, computed, onMounted, onUnmounted, watchEffect } from 'vue'
 const useAdd = todos => {
   const input = ref('')
   const addTodo = () => {
-    alert(222)
     const text = input.value && input.value.trim()
+    console.log(text)
     if(text.length === 0 ) return
+    // todos.value.unshift({
+    //   text,
+    //   completed: false
+    // })
     todos.value.unshift({
       text,
       completed: false
     })
+    input.value = ''
   }
+  console.log(9999999)
+  console.log('todos=======',todos)
   return {
     input,
     addTodo
@@ -91,8 +94,6 @@ export default {
       todos,
       ...useAdd(todos)
     }
-  },
-  components: {
   }
 }
 </script>
