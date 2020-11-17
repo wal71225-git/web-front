@@ -23,7 +23,7 @@
           <div class="view">
             <input class="toggle" type="checkbox" v-model="todo.completed">
             <label @dblclick="editTodo(todo)">{{ todo.text }}</label>
-            <button class="destroy"></button>
+            <button class="destroy" @click="remove(todo)"></button>
           </div>
           <input class="edit"
             v-model="todo.text"
@@ -67,25 +67,21 @@ const useAdd = todos => {
   const input = ref('')
   const addTodo = () => {
     const text = input.value && input.value.trim()
-    console.log(text)
     if(text.length === 0 ) return
-    // todos.value.unshift({
-    //   text,
-    //   completed: false
-    // })
-    todos.value.unshift({
-      text,
-      completed: false
-    })
-    input.value = ''
+      todos.value.unshift({
+        text,
+        completed: false
+      })
+      input.value = ''
   }
-  console.log(9999999)
-  console.log('todos=======',todos)
   return {
     input,
     addTodo
   }
 }
+
+// 2.移除待办事项
+const removeTodo = 
 export default {
   name: 'App',
   setup() {
