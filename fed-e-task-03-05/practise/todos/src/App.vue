@@ -13,12 +13,13 @@
         >
     </header>
     <section class="main">
-      <input id="toggle-all" class="toggle-all" v-model="allDone" type="checkbox">
+      <input id="toggle-all" class="toggle-all"  type="checkbox">
       <label for="toggle-all">Mark all as complete</label>
       <ul class="todo-list">
         <li
           v-for="todo in todos"
           :key="todo"
+          :class="{ 'editing': todo === editingTodo }"
         >
           <div class="view">
             <input class="toggle" type="checkbox" v-model="todo.completed">
@@ -34,8 +35,8 @@
         </li>
       </ul>
     </section>
-    <footer class="footer" v-show="count">
-      <span class="todo-count">
+    <footer class="footer" >
+      <!-- <span class="todo-count">
         <strong>{{ remainingCount }}</strong> {{ remainingCount > 1 ? 'items' : 'item' }} left
       </span>
       <ul class="filters">
@@ -45,7 +46,7 @@
       </ul>
       <button class="clear-completed" @click="removeCompleted" v-show="count > remainingCount">
         Clear completed
-      </button>
+      </button> -->
     </footer>
   </section>
   <footer class="info">
@@ -81,14 +82,38 @@ const useAdd = todos => {
 }
 
 // 2.移除待办事项
-const removeTodo = 
+const removeTodo = todos => {
+  const remove = todo => {
+    const index = todos.value.indexOf(todo)
+    todos.value.splice(index,1)
+  }
+  return {
+    remove
+  }
+}
+
+// 3.修改待办事项
+const editTodos = () => {
+  let beforeEditValue = '' // 记录初始值
+  const editingTodo = ref(null) // 是否在修改中
+  const editTodo = todo => {
+    beforeEditValue = todo.text
+    editingTodo.value = todo
+  }
+  return {
+    editingTodo,
+    editTodo
+  }
+} 
 export default {
   name: 'App',
   setup() {
     const todos = ref([])
     return {
       todos,
-      ...useAdd(todos)
+      ...useAdd(todos),
+      ...removeTodo(todos),
+      ...editTodos()
     }
   }
 }
