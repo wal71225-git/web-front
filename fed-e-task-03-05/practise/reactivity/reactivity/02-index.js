@@ -1,3 +1,4 @@
+
 const isObject = val => val != null && typeof val === 'object'
 const convert = target => isObject(target) ? reactive(target) : target
 const hasOwnPropety = Object.prototype.hasOwnPropety
@@ -8,6 +9,7 @@ export function reactive(target) {
     const handler = { // 拦截器对象
         get(target, key, receiver) {
             // 收集依赖
+            track(target, key)
             // 如果是对象，需要重新调用reactive让对象的属性也是响应式
             const result = Reflect.get(target, key, receiver)
             return convert(result)
@@ -18,7 +20,7 @@ export function reactive(target) {
             if (oldVaule !== value) {
                 result = Reflect.set(target, key, value, receiver)
                 // 触发更新
-                console.log('触发更新set')
+                trigger(target, key)
             }
             return result
         },
@@ -27,10 +29,43 @@ export function reactive(target) {
             const result = Reflect.deleteProperty(target, key)
             if (hasKey && result) {
                 // 触发更新
-                console.log('触发更新deleteProperty')
+                trigger(target, key)
             }
             return result
         }
     }
     return new Proxy(target, handler)
+}
+let activeEffect = null
+export function effect(callback) {
+    activeEffect = callback
+    callback()
+    activeEffect = null
+}
+
+// 收集依赖
+let targetMap = new WeakMap()
+export function track(target, key) {
+    if (!activeEffect) return
+    let depsMap = targetMap.get(target)
+    if (!depsMap) {
+        targetMap.set(target, (depsMap = new Map()))
+    }
+    let dep = depsMap.get(key)
+    if (!dep) {
+        depsMap.set(key, (dep = new Set()))
+    }
+    dep.add(activeEffect)
+}
+
+// 触发器（触发更新）
+export function trigger(target, key) {
+    const depsMap = targetMap.get(target)
+    if (!depsMap) return
+    const dep = depsMap.get(key)
+    if (dep) {
+        dep.forEach(effect => {
+            effect()
+        })
+    }
 }
