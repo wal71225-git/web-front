@@ -1,11 +1,4 @@
-import http from '../http/index'
-import qs from 'qs'
+import * as user from './user'
 export default {
-  goLogin(data:any) {
-    return http({
-      method: 'post',
-      url: '/front/user/login',
-      data: qs.stringify(data)
-    })
-  }
+  user: user.default
 }

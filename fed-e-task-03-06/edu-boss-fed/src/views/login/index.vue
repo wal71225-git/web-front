@@ -8,7 +8,7 @@
         <el-input type="password" v-model="user.password" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button class="login-btn" type="primary" @click="goLogin">提交</el-button>
+        <el-button class="login-btn" type="primary" @click="submit">提交</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -28,8 +28,10 @@ export default Vue.extend({
     }
   },
   methods: {
-    goLogin() {
-      console.log(111)
+    submit(): void {
+      this.$api.user.goLogin(this.user).then((res: any) => {
+        console.log('res', res)
+      })
     }
   }
 })
