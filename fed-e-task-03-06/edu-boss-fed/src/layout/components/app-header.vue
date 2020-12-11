@@ -34,10 +34,15 @@ export default Vue.extend({
     }
   },
   async created() {
-    const { data } = await this.$api.user.getUserInfo()
-    this.user = data.content || {}
+    this.getUserInfo()
+    this.getUserInfo()
+    this.getUserInfo()
   },
   methods: {
+    async getUserInfo() {
+      const { data } = await this.$api.user.getUserInfo()
+      this.user = data.content || {}
+    },
     loginOut() {
       this.$confirm('确认退出吗？', '退出提示', {
         confirmButtonText: '确定',

@@ -4,8 +4,8 @@
       default-active="4"
       @open="handleOpen"
       @close="handleClose"
-      background-color="#545c64"
-      text-color="#fff"
+      background-color="#f8f9fb"
+      text-color="#303133"
       active-text-color="#ffd04b"
       router
     >

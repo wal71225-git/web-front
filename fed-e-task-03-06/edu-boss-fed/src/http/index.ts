@@ -7,6 +7,14 @@ import qs from 'qs'
 const redirectLogin = () => {
   router.push({ name: 'login', query: { redirect: router.currentRoute.fullPath } })
 }
+const refreshToken = () => {
+  // 为了防止刷新token接口同样失败，重新创建请求对象
+  return axios.create()({
+    method: 'post',
+    url: '/front/user/refresh_token',
+    data: qs.stringify({ refreshtoken: store.state.user.refresh_token })
+  })
+}
 const request = axios.create({
   // 配置选项
   // baseURL,
@@ -24,11 +32,13 @@ request.interceptors.request.use(config => {
   return Promise.reject(error)
 })
 
+let isRfrenshing = false // 是否在刷新token
+let requests: any[] = [] // 存储刷新token期间，过来的401请求
 // 响应拦截器
 request.interceptors.response.use(response => {
   // 所有请求成功的进入这里，也就是200+的状态码
   return response
-}, async error => { // 超出2XX的进入这里
+}, error => { // 超出2XX的进入这里
   /**
    * 响应错误大体分为三种
    * 1.请求发出去了收到响应，但不是2XX的响应
@@ -47,23 +57,36 @@ request.interceptors.response.use(response => {
         redirectLogin()
         return Promise.reject(error)
       }
-      // 如果是token失效，重新刷新token,并重新发起请求
-      try {
-        // 为了防止刷新token接口同样失败，重新创建请求对象
-        const { data } = await axios.create()({
-          method: 'post',
-          url: '/front/user/refresh_token',
-          data: qs.stringify({ refreshtoken: store.state.user.refresh_token })
+      if (!isRfrenshing) {
+        isRfrenshing = true
+        // 如果是token失效，重新刷新token,并重新发起请求
+        refreshToken().then(res => {
+          if (!res.data.success) {
+            throw new Error('刷新Token失败')
+          }
+          // 成功了把刷新拿到的用户信息，放到本地信息
+          store.commit('setUser', res.data.content)
+          // 把requests队列中的请求发出去，并重置数组
+          requests.forEach(cb => cb())
+          requests = []
+          // 从error中获取请求的配置信息，重新发起请求
+          return request(error.config)
+        }).catch(error => {
+          // 如果刷新token失败，唤起登录，清空本地用户缓存
+          Message.error('登录已过期，请重新登录')
+          store.commit('setUser', null)
+          redirectLogin()
+          return Promise.reject(error)
+        }).finally(() => {
+          isRfrenshing = false
         })
-        // 成功了把刷新拿到的用户信息，放到本地信息
-        store.commit('setUser', data.content)
-        // 从error中获取请求的配置信息，重新发起请求
-        return request(error.config)
-      } catch (error) {
-        // 失败调到登录页面
-        redirectLogin()
-        return Promise.reject(error)
       }
+      // 刷新时，把请求挂起放到requests数组中
+      return new Promise(resolve => {
+        requests.push(() => {
+          resolve(request(error.config))
+        })
+      })
     } else if (status === 403) {
       Message.error('暂无权限，请联系管理员')
     } else if (status === 404) {

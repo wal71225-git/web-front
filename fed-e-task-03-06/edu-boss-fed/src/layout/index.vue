@@ -9,7 +9,6 @@
         </el-header>
         <el-main>
           <!-- 子路由出口 -->
-          子路由
           <router-view />
         </el-main>
     </el-container>
@@ -45,5 +44,6 @@ export default Vue.extend({
 
 .el-main {
   background: #e9eef3;
+  padding: 10px;
 }
 </style>
