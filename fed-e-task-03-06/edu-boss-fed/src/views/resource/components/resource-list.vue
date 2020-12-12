@@ -10,9 +10,8 @@
               <el-input v-model="search.url" placeholder="资源路径"></el-input>
             </el-form-item>
             <el-form-item label="资源分类">
-              <el-select v-model="search.region" placeholder="资源分类">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+              <el-select clearable v-model="search.categoryId" placeholder="请选择资源分类">
+                <el-option v-for="item in resourceCategories"  :label="item.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -22,21 +21,42 @@
           </el-form>
         </div>
         <el-table
-            :data="tableData"
+            :data="resourceList"
             style="width: 100%">
             <el-table-column
-                prop="date"
-                label="日期"
+                prop="id"
+                label="编号"
                 width="180">
             </el-table-column>
             <el-table-column
                 prop="name"
-                label="姓名"
+                label="资源名称"
                 width="180">
             </el-table-column>
             <el-table-column
+                prop="url"
+                label="资源路径">
+            </el-table-column>
+            <el-table-column
+                prop="description"
+                label="描述">
+            </el-table-column>
+            <el-table-column
+                prop="createdTime"
+                label="添加时间">
+            </el-table-column>
+             <el-table-column
                 prop="address"
-                label="地址">
+                label="操作">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  @click="handleEdit(scope.row)">编辑</el-button>
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click="handleDelete(scope.row)">删除</el-button>
+              </template>
             </el-table-column>
         </el-table>
       </el-card>
@@ -50,37 +70,38 @@ export default Vue.extend({
   name: 'ResourceList',
   data() {
     return {
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ],
+      resourceList: [], // 资源列表
       search: {
-        user: '',
-        region: ''
-      }
+        name: '',
+        url: '',
+        categoryId: null
+      },
+      resourceCategories: []
     }
   },
+  created() {
+    this.getResources()
+    this.getResourcesCategories()
+  },
   methods: {
+    async getResources() { // 请求资源管理数据
+      const { data } = await this.$api.resource.getResourcePages(this.search)
+      this.resourceList = data.data.records
+    },
+    async getResourcesCategories() { // 请求资源分类列表
+      const { data } = await this.$api.resource.getResourcesCategories()
+      this.resourceCategories = data.data
+    },
     onSubmit() {
-      console.log('submit!')
+      this.getResources()
+    },
+    // 删除
+    handleDelete() {
+      console.log('删除')
+    },
+    // 编辑
+    handleEdit() {
+      console.log('编辑')
     }
   }
 })

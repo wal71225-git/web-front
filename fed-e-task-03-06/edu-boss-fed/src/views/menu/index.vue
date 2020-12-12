@@ -80,7 +80,9 @@ export default Vue.extend({
     },
     async handleDelete(item: any) {
       const { data } = await this.$api.menu.deleteMenu(item.id)
-      this.getMenu()
+      if (data.code === '000000') {
+        this.getMenu()
+      }
     }
   }
 })
