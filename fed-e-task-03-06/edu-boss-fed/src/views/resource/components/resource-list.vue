@@ -59,6 +59,15 @@
               </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page.sync="search.current"
+          :page-sizes="[5, 10, 20, 50]"
+          :page-size="search.size"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="totalCount">
+        </el-pagination>
       </el-card>
   </div>
 </template>
@@ -74,9 +83,12 @@ export default Vue.extend({
       search: {
         name: '',
         url: '',
-        categoryId: null
+        categoryId: null,
+        current: 1,
+        size: 5
       },
-      resourceCategories: []
+      resourceCategories: [],
+      totalCount: 0
     }
   },
   created() {
@@ -87,6 +99,7 @@ export default Vue.extend({
     async getResources() { // 请求资源管理数据
       const { data } = await this.$api.resource.getResourcePages(this.search)
       this.resourceList = data.data.records
+      this.totalCount = data.data.total
     },
     async getResourcesCategories() { // 请求资源分类列表
       const { data } = await this.$api.resource.getResourcesCategories()
@@ -102,6 +115,14 @@ export default Vue.extend({
     // 编辑
     handleEdit() {
       console.log('编辑')
+    },
+    handleSizeChange(val: number) {
+      this.search.size = val
+      this.getResources()
+    },
+    handleCurrentChange(val: number) {
+      this.search.current = val
+      this.getResources()
     }
   }
 })
