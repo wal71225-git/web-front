@@ -10,7 +10,7 @@
         <el-input v-model="role.description" placeholder="角色名称"></el-input>
       </el-form-item>
       <el-form-item class="dialog-footer" style="text-align: right">
-        <el-button>取消</el-button>
+        <el-button @click="onCancel">取消</el-button>
         <el-button type="primary" @click="onSubmit">确认</el-button>
       </el-form-item>
    </el-form>
@@ -19,6 +19,12 @@
 import Vue from 'vue'
 export default Vue.extend({
   name: 'RoleAddOrEdit',
+  props: {
+    roleId: {
+      type: [String, Number],
+      default: ''
+    }
+  },
   data() {
     return {
       role: {
@@ -29,10 +35,20 @@ export default Vue.extend({
       formLabelWidth: '120px'
     }
   },
+  created() {
+    this.loadRole()
+  },
   methods: {
     async onSubmit() {
       await this.$api.role.saveOrUpdate(this.role)
       this.$emit('success')
+    },
+    async loadRole() {
+      const { data } = await this.$api.role.getRoleById(this.roleId)
+      console.log(data)
+    },
+    onCancel() {
+      this.$emit('cancel')
     }
   }
 })

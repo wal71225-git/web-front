@@ -13,5 +13,11 @@ export default {
       url: '/boss/role/saveOrUpdate',
       data
     })
+  },
+  getRoleById(roleId: string | number) {
+    return http({
+      method: 'get',
+      url: `/boss/role/${roleId}`
+    })
   }
 }

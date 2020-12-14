@@ -16,7 +16,7 @@
         </el-form>
       </div>
       <div style="height:70px;border-bottom: 1px solid #EBEEF5;">
-        <el-button style="padding-left: 20px" @click="dialogVisible = true">添加角色</el-button>
+        <el-button style="padding-left: 20px" @click="addOrEditRole(false)">添加角色</el-button>
       </div>
       <el-table
         :data="roleList"
@@ -48,7 +48,7 @@
             <el-button @click="handleClick(scope.row)" type="text" size="small">分配菜单</el-button>
             <el-button type="text" size="small">分配资源</el-button>
             <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-            <el-button type="text" size="small">编辑</el-button>
+            <el-button type="text" size="small" @click="addOrEditRole(true, scope.row)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -63,9 +63,13 @@
       </el-pagination>
     </el-card>
     <el-dialog
-      title="添加角色"
+      :title="isEdit ? '编辑角色' : '添加角色'"
       :visible.sync="dialogVisible" width="40%">
-      <add-or-edit @success="addRoleSuccess" />
+      <add-or-edit @success="addRoleSuccess"
+      @cancel="onCancel"
+      :roleId="roleId"
+      :isEdit="isEdit"
+      />
     </el-dialog>
   </div>
 </template>
@@ -87,7 +91,9 @@ export default Vue.extend({
         size: 5
       },
       total: 0,
-      dialogVisible: false
+      dialogVisible: false,
+      isEdit: false,
+      roleId: null
     }
   },
   components: {
@@ -99,7 +105,6 @@ export default Vue.extend({
   methods: {
     async loadDatas() {
       const { data } = await this.$api.role.getRolePages(this.search)
-      console.log(data)
       this.roleList = data.data.records
       this.total = data.data.total
     },
@@ -125,6 +130,14 @@ export default Vue.extend({
       // 角色添加成功
       this.dialogVisible = false
       this.loadDatas()
+    },
+    onCancel() {
+      this.dialogVisible = false
+    },
+    addOrEditRole(isEdit: boolean, item: any) {
+      this.dialogVisible = true
+      this.isEdit = isEdit
+      this.roleId = item.id || ''
     }
   }
 })
