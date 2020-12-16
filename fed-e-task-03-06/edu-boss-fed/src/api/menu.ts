@@ -22,10 +22,16 @@ export default {
       }
     })
   },
-  deleteMenu(id: number) {
+  deleteMenu(id: number) { // 删除菜单
     return http({
       method: 'delete',
       url: `/boss/menu/${id}`
+    })
+  },
+  getMenuNodeList() { // 获取所有菜单并按层级展示
+    return http({
+      method: 'get',
+      url: '/boss/menu/getMenuNodeList'
     })
   }
 }

@@ -44,8 +44,11 @@ export default Vue.extend({
       this.$emit('success')
     },
     async loadRole() {
-      const { data } = await this.$api.role.getRoleById(this.roleId)
-      console.log(data)
+      if (this.roleId) {
+        const { data } = await this.$api.role.getRoleById(this.roleId)
+        console.log(data)
+        this.role = data.data
+      }
     },
     onCancel() {
       this.$emit('cancel')
