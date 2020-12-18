@@ -17,5 +17,21 @@ export default {
       method: 'GET',
       url: '/front/user/getInfo'
     })
+  },
+  getUserPages(data: any) { // 分页查询用户
+    return http({
+      method: 'post',
+      url: '/boss/user/getUserPages',
+      data
+    })
+  },
+  enableUser(userId: string | number) { // 启用用户
+    return http({
+      method: 'get',
+      url: '/boss/user/enableUser',
+      params: {
+        userId
+      }
+    })
   }
 }

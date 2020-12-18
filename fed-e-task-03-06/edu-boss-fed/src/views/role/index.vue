@@ -45,7 +45,7 @@
           prop="createdTime"
           label="操作">
           <template slot-scope="scope">
-            <el-button @click="addMenu" type="text" size="small">分配菜单</el-button>
+            <el-button @click="addMenu(scope.row)" type="text" size="small">分配菜单</el-button>
             <el-button type="text" size="small">分配资源</el-button>
             <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
             <el-button type="text" size="small" @click="addOrEditRole(true, scope.row)">编辑</el-button>
@@ -139,8 +139,8 @@ export default Vue.extend({
       this.isEdit = isEdit
       this.roleId = item.id || ''
     },
-    addMenu() { // 分配菜单
-      this.$router.push({ name: 'alloc-menu' })
+    addMenu(item: any) { // 分配菜单
+      this.$router.push({ name: 'alloc-menu', params: { roleId: item.id } })
     }
   }
 })
