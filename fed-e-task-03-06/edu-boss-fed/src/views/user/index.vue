@@ -3,10 +3,10 @@
     <el-card>
       <!-- 页面查询start -->
       <el-form ref="searchForm" label-width="80px" :inline="true" :model="search">
-        <el-form-item label="手机号">
+        <el-form-item label="手机号" prop="phone">
           <el-input v-model="search.phone" placeholder="请输入手机号"/>
         </el-form-item>
-        <el-form-item label="注册时间">
+        <el-form-item label="注册时间" prop="date">
           <el-date-picker
             v-model="search.date"
             type="datetimerange"
@@ -17,6 +17,17 @@
             align="right">
           </el-date-picker>
         </el-form-item>
+        <el-form-item>
+          <el-button
+            :disabled="loading"
+            @click="handleReset"
+          >重置</el-button>
+          <el-button
+            type="primary"
+            @click="handleQuery"
+            :disabled="loading"
+          >查询</el-button>
+        </el-form-item>
       </el-form>
      <!-- 页面查询end -->
      <!-- 用户列表开始 -->
@@ -25,31 +36,26 @@
         style="width: 100%;margin-bottom: 20px;">
         <el-table-column
           prop="id"
-          label="用户ID"
-          width="120">
+          label="用户ID">
         </el-table-column>
         <el-table-column
           prop="portrait"
-          label="头像"
-          width="100">
+          label="头像">
           <template slot-scope="scope">
               <el-avatar :src="scope.row.portrait"></el-avatar>
           </template>
         </el-table-column>
         <el-table-column
           prop="name"
-          label="用户名"
-          width="120">
+          label="用户名">
         </el-table-column>
         <el-table-column
           prop="phone"
-          label="手机号"
-          width="120">
+          label="手机号">
         </el-table-column>
         <el-table-column
           prop="createTime"
-          label="注册时间"
-          width="280">
+          label="注册时间">
         </el-table-column>
         <el-table-column
           prop="status"
@@ -68,7 +74,8 @@
         </el-table-column>
         <el-table-column
           prop="createdTime"
-          label="操作">
+          label="操作"
+          width="250">
           <template slot-scope="scope">
             <el-button @click="addMenu(scope.row)" type="text" size="small">禁用</el-button>
             <el-button type="text" size="small" @click="openDialog(scope.row.id)">分配角色</el-button>
@@ -110,6 +117,7 @@
 </template>
 
 <script lang="ts">
+import { Form } from 'element-ui'
 import Vue from 'vue'
 
 export default Vue.extend({
@@ -120,7 +128,9 @@ export default Vue.extend({
         phone: '',
         date: '',
         pageSize: 5,
-        currentPage: 1
+        currentPage: 1,
+        userId: '',
+        roleIdList: []
       },
       total: 0,
       userList: [],
@@ -156,7 +166,8 @@ export default Vue.extend({
       value: '',
       roleValue: [1, 2, 4],
       userId: -1,
-      checkedList: [] as any
+      checkedList: [] as any,
+      loading: false // 是否展示loading
     }
   },
   created() {
@@ -164,9 +175,11 @@ export default Vue.extend({
   },
   methods: {
     async initData() { // 初始化列表数据
+      this.loading = true
       const { data } = await this.$api.user.getUserPages(this.search)
       this.total = data.data.total
       this.userList = data.data.records
+      this.loading = false
     },
     handleSizeChange(val: number) { // 切换每页展示数量
       this.search.currentPage = 1
@@ -175,6 +188,14 @@ export default Vue.extend({
     },
     handleCurrentChange(val: number) { // 切换页码
       this.search.currentPage = val
+      this.initData()
+    },
+    handleQuery() { // 根据筛选条件查询
+      this.search.currentPage = 1
+      this.initData()
+    },
+    handleReset() { // 重置筛选框
+      (this.$refs.searchForm as Form).resetFields()
       this.initData()
     },
     async statusChange(userId: string | number) { // 启用用户
@@ -194,10 +215,12 @@ export default Vue.extend({
       this.dialogVisible = true
     },
     async allocateRoles() {
-      const { data } = await this.$api.allocateUserRoles({
-        userId: this.roleId,
+      await this.$api.role.allocateUserRoles({
+        userId: this.userId,
         roleIdList: this.checkedList
       })
+      this.dialogVisible = false
+      this.$message.success('分配成功')
     }
   }
 })
