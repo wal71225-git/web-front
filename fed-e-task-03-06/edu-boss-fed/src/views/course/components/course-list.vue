@@ -14,6 +14,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="loading" @click="searchCourse">查询</el-button>
+          <el-button type="primary"  @click="toAddCourse">新建课程</el-button>
         </el-form-item>
       </el-form>
       <!-- 筛选查询end -->
@@ -112,6 +113,9 @@ export default {
     },
     searchCourse() { // 搜索
       this.initData()
+    },
+    toAddCourse() { // 跳转新建课程
+      this.$router.push({ name: 'course-create' })
     }
   }
 }
