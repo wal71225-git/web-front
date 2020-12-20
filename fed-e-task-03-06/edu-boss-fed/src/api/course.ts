@@ -6,5 +6,12 @@ export default {
       url: '/boss/course/getQueryCourses',
       data
     })
+  },
+  changeState(params: any) {
+    return http({
+      method: 'get',
+      url: '/boss/course/changeState',
+      params
+    })
   }
 }

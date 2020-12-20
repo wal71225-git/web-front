@@ -41,12 +41,13 @@
           label="状态">
           <template slot-scope="scope">
             <el-switch
+              @change="changeStatus(scope.row)"
+              :disabled="currentCourseId === scope.row.id && switchloading"
               v-model="scope.row.status"
               active-color="#13ce66"
               inactive-color="#ff4949"
               :active-value="1"
-              :inactive-value="0"
-              :disabled="loading">
+              :inactive-value="0">
             </el-switch>
           </template>
         </el-table-column>
@@ -88,7 +89,9 @@ export default {
       },
       courseList: [],
       total: 0,
-      loading: true
+      loading: true,
+      currentCourseId: -1, // 当前行id
+      switchloading: false // 改变状态loading
     }
   },
   created() {
@@ -116,6 +119,16 @@ export default {
     },
     toAddCourse() { // 跳转新建课程
       this.$router.push({ name: 'course-create' })
+    },
+    async changeStatus(course) {
+      this.switchloading = true
+      this.currentCourseId = course.id
+      const params = {
+        courseId: course.id,
+        status: course.status
+      }
+      await this.$api.course.changeState(params)
+      this.switchloading = false
     }
   }
 }
