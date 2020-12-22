@@ -75,13 +75,103 @@
                   <el-input-number v-model="course.sortNum" label="数字越大越靠后"></el-input-number>
                 </el-form-item>
                 <el-form-item label="课程封面">
-                  <course-img/>
+                  <course-img v-model="course.courseListImg"/>
                 </el-form-item>
                 <el-form-item label="解锁封面">
-                  <course-img/>
+                  <course-img v-model="course.courseImgUrl"/>
                 </el-form-item>
               </div>
               <!-- 基本信息end -->
+              <!-- 销售信息start -->
+              <div v-show="activeIndex === 1">
+                <el-form-item label="售卖价格">
+                  <el-input placeholder="售卖价格" v-model="course.discounts">
+                    <template slot="append">元</template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="商品原价">
+                  <el-input placeholder="商品原价" v-model="course.price">
+                    <template slot="append">元</template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="销量">
+                  <el-input placeholder="销量" v-model="course.sales">
+                    <template slot="append">单</template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="活动标签">
+                  <el-input
+                      type="text"
+                      placeholder="活动标签"
+                      v-model="course.discountsTag"
+                      maxlength="4"
+                      show-word-limit/>
+                </el-form-item>
+              </div>
+              <!-- 销售信息end -->
+              <!-- 秒杀活动start -->
+              <div v-show="activeIndex === 2">
+                <el-form-item label="限时秒杀开关">
+                  <el-switch
+                    v-model="course.activityCourse"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                  >
+                  </el-switch>
+                </el-form-item>
+                <template v-if="course.activityCourse">
+                  <el-form-item label="开始时间">
+                    <el-date-picker
+                      v-model="course.activityCourseDTO.beginTime"
+                      type="date"
+                      placeholder="选择日期时间"
+                      value-format="yyyy-MM-dd"
+                    />
+                  </el-form-item>
+                  <el-form-item label="结束时间">
+                    <el-date-picker
+                      v-model="course.activityCourseDTO.endTime"
+                      type="date"
+                      placeholder="选择日期时间"
+                      value-format="yyyy-MM-dd"
+                    />
+                  </el-form-item>
+                  <el-form-item label="秒杀价">
+                    <el-input v-model.number="course.activityCourseDTO.amount" type="number">
+                      <template slot="append">元</template>
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item label="秒杀库存">
+                    <el-input v-model.number="course.activityCourseDTO.stock" type="number">
+                      <template slot="append">个</template>
+                    </el-input>
+                  </el-form-item>
+                </template>
+              </div>
+              <!-- 秒杀活动end -->
+              <!-- 课程详情start -->
+              <div v-show="activeIndex === 3">
+                <el-form-item label="课程详情">
+                  <!-- <text-editor v-model="course.courseDescriptionMarkDown" /> -->
+                  <el-input v-model="course.courseDescriptionMarkDown" type="textarea"></el-input>
+                </el-form-item>
+                <el-form-item label="是否发布">
+                  <el-switch
+                    v-model="course.status"
+                    :active-value="1"
+                    :inactive-value="0"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                  />
+                </el-form-item>
+                <el-form-item>
+                  <el-button
+                    type="primary"
+                    @click="handleSave"
+                  >保存</el-button>
+                </el-form-item>
+              </div>
+              <!-- 课程详情end -->
           </el-form>
       </el-card>
   </div>
@@ -142,6 +232,12 @@ export default Vue.extend({
         },
         autoOnlineTime: ''
       }
+    }
+  },
+  methods: {
+    async handleSave() {
+      const { data } = await this.$api.course.saveOrUpdateCourse(this.course)
+      console.log('data-=======', data)
     }
   }
 })
