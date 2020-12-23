@@ -1,6 +1,8 @@
 <template>
   <div class="course">
-    <course-or-edit/>
+    {{courseId}}
+    <course-or-edit :courseId="courseId"/>
+    {{courseId}}
   </div>
 </template>
 
@@ -13,9 +15,6 @@ export default Vue.extend({
   components: {
     CourseOrEdit
   },
-  data() {
-    return {
-    }
-  }
+  props: ['courseId']
 })
 </script>
