@@ -28,5 +28,14 @@ export default {
       url: '/boss/course/saveOrUpdateCourse',
       data
     })
+  },
+  getCourseById(courseId: string | number) { // 通过id获取课程信息
+    return http({
+      method: 'get',
+      url: '/boss/course/getCourseById',
+      params: {
+        courseId
+      }
+    })
   }
 }

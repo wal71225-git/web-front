@@ -1,8 +1,6 @@
 <template>
   <div class="course">
-    {{courseId}}
     <course-or-edit :courseId="courseId"/>
-    {{courseId}}
   </div>
 </template>
 

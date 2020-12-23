@@ -151,8 +151,8 @@
               <!-- 课程详情start -->
               <div v-show="activeIndex === 3">
                 <el-form-item label="课程详情">
-                  <!-- <text-editor v-model="course.courseDescriptionMarkDown" /> -->
-                  <el-input v-model="course.courseDescriptionMarkDown" type="textarea"></el-input>
+                  <text-editor v-model="course.courseDescriptionMarkDown" />
+                  <!-- <el-input v-model="course.courseDescriptionMarkDown" type="textarea"></el-input> -->
                 </el-form-item>
                 <el-form-item label="是否发布">
                   <el-switch
@@ -178,6 +178,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import CourseImg from './course-image.vue'
+import TextEditor from '../../../components/text-edit/index.vue'
 
 export default Vue.extend({
   name: 'CourseCreate',
@@ -188,7 +189,8 @@ export default Vue.extend({
     }
   },
   components: {
-    CourseImg
+    CourseImg,
+    TextEditor
   },
   data() {
     return {
@@ -239,13 +241,14 @@ export default Vue.extend({
     }
   },
   created() {
-    console.log('courseId', this.courseId)
-  },
-  mounted() {
-    console.log('courseId', this.courseId)
+    this.courseId !== 0 && this.initData()
   },
   methods: {
-    async handleSave() {
+    async initData() { // 获取课程信息
+      const { data } = await this.$api.course.getCourseById(this.courseId)
+      this.course = data.data
+    },
+    async handleSave() { // 保存课程信息
       await this.$api.course.saveOrUpdateCourse(this.course)
       this.$router.push({
         name: 'course'
