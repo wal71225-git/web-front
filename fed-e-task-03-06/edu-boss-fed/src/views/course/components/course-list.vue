@@ -56,7 +56,7 @@
           label="操作">
           <template slot-scope="scope">
             <el-button :disabled="loading" @click="edit(scope.row.id)" type="text" size="small">编辑</el-button>
-            <el-button :disabled="loading" type="text" size="small" @click="openContent(scope.row)">内容管理</el-button>
+            <el-button :disabled="loading" type="text" size="small" @click="openContent(scope.row.id)">内容管理</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -130,9 +130,17 @@ export default {
       await this.$api.course.changeState(params)
       this.switchloading = false
     },
-    edit(courseId) {
+    edit(courseId) { // 编辑
       this.$router.push({
         name: 'course-edit',
+        params: {
+          courseId
+        }
+      })
+    },
+    openContent(courseId) { // 内容管理
+      this.$router.push({
+        name: 'course-section',
         params: {
           courseId
         }

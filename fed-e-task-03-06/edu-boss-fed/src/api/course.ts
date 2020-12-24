@@ -14,7 +14,7 @@ export default {
       params
     })
   },
-  upLoad(data: any, onUploadProgress: any) { // 上传图片
+  upLoad(data: any, onUploadProgress?: any) { // 上传图片
     return http({
       method: 'post',
       url: '/boss/course/upload',

@@ -1,7 +1,7 @@
 <template>
       <el-card>
           <div>
-            <el-button  size="medium" icon="el-icon-arrow-left">返回</el-button>
+            <el-button  size="medium" icon="el-icon-arrow-left" @click="goBack">返回</el-button>
             <span style="margin-left: 20px;">新增课程</span>
           </div>
           <!-- 导航条start -->
@@ -250,6 +250,9 @@ export default Vue.extend({
     },
     async handleSave() { // 保存课程信息
       await this.$api.course.saveOrUpdateCourse(this.course)
+      this.goBack()
+    },
+    goBack() {
       this.$router.push({
         name: 'course'
       })
@@ -257,3 +260,8 @@ export default Vue.extend({
   }
 })
 </script>
+<style lang="scss" scoped>
+.el-steps {
+  cursor: pointer;
+}
+</style>
