@@ -56,7 +56,7 @@
           label="操作">
           <template slot-scope="scope">
             <el-button :disabled="loading" @click="edit(scope.row.id)" type="text" size="small">编辑</el-button>
-            <el-button :disabled="loading" type="text" size="small" @click="openContent(scope.row.id)">内容管理</el-button>
+            <el-button :disabled="loading" type="text" size="small" @click="openContent(scope.row.id, scope.row.courseName)">内容管理</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -138,11 +138,12 @@ export default {
         }
       })
     },
-    openContent(courseId) { // 内容管理
+    openContent(courseId, courseName) { // 内容管理
       this.$router.push({
         name: 'course-section',
         params: {
-          courseId
+          courseId,
+          courseName
         }
       })
     }
