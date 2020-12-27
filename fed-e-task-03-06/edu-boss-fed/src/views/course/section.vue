@@ -17,7 +17,17 @@
             </span>
             <span v-else>
               <el-button>编辑</el-button>
-              <el-button>上传视频</el-button>
+              <el-button @click="$router.push({
+                name: 'course-video',
+                params:{
+                  sectionId: node.parent.id,
+                  lessonId: data.id,
+                },
+                query: {
+                  courseName,
+                  lessonName: data.theme
+                }
+              })">上传视频</el-button>
               <el-button>已隐藏</el-button>
             </span>
           </div>
