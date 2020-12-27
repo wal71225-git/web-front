@@ -8,5 +8,19 @@ export default {
         courseId
       }
     })
+  },
+  saveOrUpdateSection(data: any) { // 保存或更新阶段信息
+    return http({
+      method: 'post',
+      url: '/boss/course/section/saveOrUpdateSection',
+      data
+    })
+  },
+  saveOrUpdateLesson(data: any) { // 保存或更新课时信息
+    return http({
+      method: 'post',
+      url: '/boss/course/lesson/saveOrUpdate',
+      data
+    })
   }
 }
