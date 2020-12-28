@@ -12,7 +12,7 @@
             <span>{{node.label}}</span>
             <span v-if="data.sectionName">
               <el-button>编辑</el-button>
-              <el-button>添加课时</el-button>
+              <el-button @click="addLesson(node)">添加课时</el-button>
               <el-button>已隐藏</el-button>
             </span>
             <span v-else>
@@ -32,6 +32,38 @@
             </span>
           </div>
         </el-tree>
+
+        <!-- 添加课时弹窗 -->
+        <el-dialog title="课时基本信息" :visible.sync="isAddLesson">
+          <el-form :model="lessonForm">
+            <el-form-item label="课时名称" label-width="120px">
+              <el-input v-model="lessonForm.theme" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="课时时长" label-width="120px">
+              <el-input placeholder="商品原价" v-model="lessonForm.duration">
+                <template slot="append">分钟</template>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="是否开放试听">
+              <el-switch
+                v-model="lessonForm.isFree"
+                :active-value="1"
+                :inactive-value="0"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+              />
+            </el-form-item>
+            <el-form-item label="课时排序" label-width="120px">
+              <el-input placeholder="课时排序" v-model="lessonForm.orderNum">
+                <template slot="append">数字越大越靠后</template>
+              </el-input>
+            </el-form-item>
+           </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="isAddLesson = false">取 消</el-button>
+            <el-button type="primary" @click="saveLesson">确 定</el-button>
+          </div>
+        </el-dialog>
       </el-card>
   </div>
 </template>
@@ -63,7 +95,17 @@ export default Vue.extend({
           return data.sectionName || data.theme
         }
       },
-      section: []
+      section: [],
+      isAddLesson: false,
+      lessonForm: {
+        courseId: this.courseId,
+        sectionId: -1,
+        theme: '', // 课时名称
+        duration: -1, // 课时长度
+        isFree: 0, // 是否开放试听
+        orderNum: -1, // 课时排序
+        status: 0 // 0 隐藏 1 未发布  2 已发布
+      }
     }
   },
   mounted() {
@@ -111,6 +153,16 @@ export default Vue.extend({
         console.log(err)
         this.$message.error('排序失败')
       }
+    },
+    async addLesson(node: any) {
+      this.isAddLesson = true
+      this.lessonForm.sectionId = node.id
+    },
+    // 保存课时
+    async saveLesson() {
+      const { data } = await this.$api.lesson.saveOrUpdate(this.lessonForm)
+      console.log('data', data)
+      this.isAddLesson = false
     }
   }
 })
