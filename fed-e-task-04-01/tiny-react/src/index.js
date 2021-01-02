@@ -1,5 +1,6 @@
 
 import TinyReact from './TinyReact'
+const app = document.getElementById('app')
 // babel在转化下面virtualDOM时会主动调用TinyReact.createElement方法
 const virtualDOM = (
     <div className="container">
@@ -18,4 +19,5 @@ const virtualDOM = (
       <input type="text" value="13" />
     </div>
 )
+TinyReact.render(virtualDOM, app)
 console.log(virtualDOM)
