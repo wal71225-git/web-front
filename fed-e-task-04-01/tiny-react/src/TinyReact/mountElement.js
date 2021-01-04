@@ -1,4 +1,6 @@
 import mountNativeElement from './mountNativeElement'
+import isFunction from './isFunction'
+import mountComponent from './mountComponent'
 /**
  * 此方法主要用于生成真实dom
  *
@@ -7,6 +9,11 @@ import mountNativeElement from './mountNativeElement'
 const mountElement = (virtualDOM, container) => {
   // 分别区分是普通virtualDOM还是组件virtualDOM来处理
   // 如果是普通virtualDOM，执行mountNativeElement方法
-  mountNativeElement(virtualDOM, container)
+  if(isFunction(virtualDOM)) {
+    // 组件类型
+    mountComponent(virtualDOM, container)
+  } else {
+    mountNativeElement(virtualDOM, container)
+  }
 }
 export default mountElement

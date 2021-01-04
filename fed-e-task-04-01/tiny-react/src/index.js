@@ -2,6 +2,7 @@
 import TinyReact from './TinyReact'
 const app = document.getElementById('app')
 // babel在转化下面virtualDOM时会主动调用TinyReact.createElement方法
+// 普通虚拟dom
 const virtualDOM = (
     <div className="container">
       <h1>你好 Tiny React</h1>
@@ -19,5 +20,22 @@ const virtualDOM = (
       <input type="text" value="13" />
     </div>
 )
-TinyReact.render(virtualDOM, app)
-console.log(virtualDOM)
+// TinyReact.render(virtualDOM, app)
+
+// 函数类型虚拟dom
+const Heart = (props) => {
+return <div>{props.title}&hearts;</div>
+}
+TinyReact.render(<Heart title='react virtualDOM'/>, app)
+
+
+// 类组件
+class Alert extends TinyReact.Component {
+  constructor(props) {
+    super(props)
+  }
+  render() {
+  return <div>{this.props.name}hello render</div>
+  }
+}
+TinyReact.render(<Alert name="levy"/>, app)
