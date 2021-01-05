@@ -14,6 +14,7 @@ const createDOMElement = virtualDOM => {
     newElement = document.createElement(virtualDOM.type)
     updateElementNode(newElement,virtualDOM) // 为元素设置属性
   }
+  newElement._virtualDOM = virtualDOM
   virtualDOM.children.forEach(child => {
     // 因为要区分普通virtualDOM还是组件virtualDOM所以还是调用mountElement方法
     mountElement(child, newElement)

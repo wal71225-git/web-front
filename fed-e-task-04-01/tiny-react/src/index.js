@@ -20,13 +20,32 @@ const virtualDOM = (
       <input type="text" value="13" />
     </div>
 )
-// TinyReact.render(virtualDOM, app)
+
+// 用来验证普通dom修改
+const modifyDOM = (
+  <div className="container">
+    <h1>你好 Tiny React</h1>
+    <h2 data-test="test123">(编码必杀技)</h2>
+    <div>
+      嵌套1 <div>嵌套 1.1</div>
+    </div>
+    <h3>(观察: 这个将会被改变)</h3>
+    {2 == 1 && <div>如果2和1相等渲染当前内容</div>}
+    {2 == 2 && <div>2</div>}
+    <button onClick={() => alert("你好!!!!!")}>点击我</button>
+    <input type="text" value="13" />
+  </div>
+)
+TinyReact.render(virtualDOM, app)
+setTimeout(() => {
+  TinyReact.render(modifyDOM, app)
+}, 3000)
 
 // 函数类型虚拟dom
 const Heart = (props) => {
 return <div>{props.title}&hearts;</div>
 }
-TinyReact.render(<Heart title='react virtualDOM'/>, app)
+// TinyReact.render(<Heart title='react virtualDOM'/>, app)
 
 
 // 类组件
@@ -38,4 +57,4 @@ class Alert extends TinyReact.Component {
   return <div>{this.props.name}hello render</div>
   }
 }
-TinyReact.render(<Alert name="levy"/>, app)
+// TinyReact.render(<Alert name="levy"/>, app)
