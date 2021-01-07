@@ -55,7 +55,7 @@ class Alert extends TinyReact.Component {
     super(props)
   }
   render() {
-  return <div>{this.props.name}hello render</div>
+   return <div>{this.props.name}hello render</div>
   }
 }
-// TinyReact.render(<Alert name="levy"/>, app)
+TinyReact.render(<Alert name="levy"/>, app)
