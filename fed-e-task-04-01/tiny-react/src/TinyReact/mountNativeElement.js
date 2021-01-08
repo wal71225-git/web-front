@@ -7,5 +7,10 @@ import createDOMElement from './createDOMElement'
 const mountNativeElement = (virtualDOM, container) => {
     let newElement = createDOMElement(virtualDOM)
     container.appendChild(newElement)
+      // 获取组件实例对象
+    const component = virtualDOM.component
+    if(component) {
+       component.setDom(newElement)
+    }
 }
 export default mountNativeElement

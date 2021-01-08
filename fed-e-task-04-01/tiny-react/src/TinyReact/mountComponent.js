@@ -27,7 +27,6 @@ const mountComponent = (virtualDOM, container) => {
 }
 // 函数组件转普通虚拟dom
 const buildFunctionComponent = virtualDOM => {
-  console.log('virtualDOM.props====', virtualDOM.props)
   return virtualDOM.type(virtualDOM.props||{})
 }
 
@@ -35,6 +34,7 @@ const buildFunctionComponent = virtualDOM => {
 const buildClassComponent = virtualDOM => {
   const component = new virtualDOM.type(virtualDOM.props || {})
   const nextVirtualDOM = component.render()
+  nextVirtualDOM.component = component
   return nextVirtualDOM
 }
 export default mountComponent

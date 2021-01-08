@@ -37,10 +37,10 @@ const modifyDOM = (
     <input type="text" value="13" />
   </div>
 )
-TinyReact.render(virtualDOM, app)
-setTimeout(() => {
-  TinyReact.render(modifyDOM, app)
-}, 3000)
+// TinyReact.render(virtualDOM, app)
+// setTimeout(() => {
+//   TinyReact.render(modifyDOM, app)
+// }, 3000)
 
 // 函数类型虚拟dom
 const Heart = (props) => {
@@ -53,9 +53,25 @@ return <div>{props.title}&hearts;</div>
 class Alert extends TinyReact.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      title: 'default title'
+    }
+    // 更改 handleChange 方法中的 this 指向 让 this 指向类实例对象
+    this.handleChange = this.handleChange.bind(this)
+  }
+  handleChange() {
+    // 调用父类方法改变title
+    this.setState({
+      title: 'change title'
+    })
   }
   render() {
-   return <div>{this.props.name}hello render</div>
+   return ( 
+   <div>
+     <h1>{this.state.title}</h1>
+     {this.props.name}hello render
+     <button onClick={this.handleChange}>改变title</button>
+   </div>)
   }
 }
 TinyReact.render(<Alert name="levy"/>, app)

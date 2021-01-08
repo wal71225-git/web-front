@@ -12,12 +12,14 @@ const diff = (virtualDOM, container, oldDom) => {
   if (!oldDom) {
     // 没有旧的dom，就去生成真实dom
     mountElement(virtualDOM, container, oldDom)
-  } else if (virtualDOM.type === oldVirtualDOM.type && typeof virtualDOM.type !== 'function') { // 新旧节点类型不同直接用新节点替换旧节点
-        // 不需要对比
+  } else if (virtualDOM.type === oldVirtualDOM.type && typeof virtualDOM.type !== 'function') { // 新旧节点类型不同直接用新节点替换旧节点 
+    // 不需要对比
     // 使用新的 virtualDOM 对象生成真实 DOM 对象
     const newElement = createDOMElement(virtualDOM)
     // 使用新的 DOM 对象替换旧的 DOM 对象
     oldDom.parentNode.replaceChild(newElement, oldDom)
+  } else if(typeof virtualDOM.type === 'function') {
+    // 如果是组件
   } else if(oldVirtualDOM && virtualDOM.type === oldVirtualDOM.type) { // 如果节点类型相同
     if(virtualDOM.type === "text") { // 如果是文本节点，更新文本内容
       updateTextNode(virtualDOM, oldVirtualDOM, oldDom)
