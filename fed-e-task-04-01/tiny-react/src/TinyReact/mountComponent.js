@@ -6,23 +6,22 @@ import mountNativeElement from './mountNativeElement'
  * @param {*} virtualDOM 
  * @param {*} container 
  */
-const mountComponent = (virtualDOM, container) => {
+const mountComponent = (virtualDOM, container, oldDom) => {
   let nextVirtualDOM = null
   let classVirtualDOM = null
   // 转换成普通虚拟dom格式
   // 如果是函数组件,
   if(isFunctionComponent(virtualDOM)){
     nextVirtualDOM = buildFunctionComponent(virtualDOM)
-    console.log('nextVirtualDOM', nextVirtualDOM)
   } else {
     // 类组件
     nextVirtualDOM = buildClassComponent(virtualDOM)
   }
   // 渲染真实dom
   if(isFunction(nextVirtualDOM)) {
-    mountComponent(nextVirtualDOM, container)
+    mountComponent(nextVirtualDOM, container, oldDom)
   } else {
-    mountNativeElement(nextVirtualDOM, container)
+    mountNativeElement(nextVirtualDOM, container, oldDom)
   }
 }
 // 函数组件转普通虚拟dom

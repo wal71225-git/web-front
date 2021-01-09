@@ -11,5 +11,6 @@ const unmountNode = node => {
       // 阻止程序向下执行
       return
    }
+   node.remove()
 }
 export default unmountNode

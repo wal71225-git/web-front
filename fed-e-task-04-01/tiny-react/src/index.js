@@ -75,3 +75,7 @@ class Alert extends TinyReact.Component {
   }
 }
 TinyReact.render(<Alert name="levy"/>, app)
+setTimeout(() => {
+  // TinyReact.render(<Heart title='react virtualDOM'/>, app)
+  TinyReact.render(<Alert name="代表"/>, app)
+}, 3000)

@@ -3,8 +3,10 @@ import updateTextNode from './updateTextNode'
 import updateElementNode from './updateElementNode'
 import unmountNode from './unmountNode'
 import createDOMElement from './createDOMElement'
+import diffComponent from './diffComponent'
 const diff = (virtualDOM, container, oldDom) => {
   const oldVirtualDOM = oldDom && oldDom._virtualDOM
+  const oldComponent = oldVirtualDOM && oldVirtualDOM.component
   /**
    * virtualDOM有两种形式，一种是普通的virtualDOM，另一种是组件形式的，在转换真实dom时要分别处理
    */
@@ -19,7 +21,8 @@ const diff = (virtualDOM, container, oldDom) => {
     // 使用新的 DOM 对象替换旧的 DOM 对象
     oldDom.parentNode.replaceChild(newElement, oldDom)
   } else if(typeof virtualDOM.type === 'function') {
-    // 如果是组件
+    // 如果是组件, 就去更新组件
+    diffComponent(virtualDOM, oldComponent, oldDom, container)
   } else if(oldVirtualDOM && virtualDOM.type === oldVirtualDOM.type) { // 如果节点类型相同
     if(virtualDOM.type === "text") { // 如果是文本节点，更新文本内容
       updateTextNode(virtualDOM, oldVirtualDOM, oldDom)

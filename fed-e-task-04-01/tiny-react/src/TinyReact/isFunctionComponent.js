@@ -4,7 +4,6 @@ import isFunction from './isFunction'
  */
 const isFunctionComponent = virtualDom => {
   const type = virtualDom.type
-  console.log('type', type.prototype)
   return type && isFunction(virtualDom) && !(type.prototype && type.prototype.render)
 }
 export default isFunctionComponent
