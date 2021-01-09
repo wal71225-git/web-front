@@ -19,6 +19,10 @@ const createDOMElement = virtualDOM => {
     // 因为要区分普通virtualDOM还是组件virtualDOM所以还是调用mountElement方法
     mountElement(child, newElement)
   })
+  // 实现元素的ref属性
+  if (virtualDOM.props && virtualDOM.props.ref) {
+    virtualDOM.props.ref(newElement)
+  }
   return newElement
 }
 export default createDOMElement

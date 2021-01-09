@@ -43,8 +43,16 @@ const modifyDOM = (
 // }, 3000)
 
 // 函数类型虚拟dom
-const Heart = (props) => {
-return <div>{props.title}&hearts;</div>
+// const Heart = (props) => {
+// return <div>{props.title}&hearts;</div>
+// }
+class Heart extends TinyReact.Component {
+  constructor(props) {
+    super(props)
+  }
+  render () {
+    return (<div>{this.props.title}&hearts;</div>)
+  }
 }
 // TinyReact.render(<Heart title='react virtualDOM'/>, app)
 
@@ -64,18 +72,22 @@ class Alert extends TinyReact.Component {
     this.setState({
       title: 'change title'
     })
+    console.log(this.input)
+    console.log(this.heart)
   }
   render() {
    return ( 
    <div>
      <h1>{this.state.title}</h1>
      {this.props.name}hello render
+     <input type="text" ref={input => (this.input = input)} />
+     <Heart ref={heart => (this.heart = heart)} title="张三" />
      <button onClick={this.handleChange}>改变title</button>
    </div>)
   }
 }
 TinyReact.render(<Alert name="levy"/>, app)
-setTimeout(() => {
-  // TinyReact.render(<Heart title='react virtualDOM'/>, app)
-  TinyReact.render(<Alert name="代表"/>, app)
-}, 3000)
+// setTimeout(() => {
+//   // TinyReact.render(<Heart title='react virtualDOM'/>, app)
+//   TinyReact.render(<Alert name="代表"/>, app)
+// }, 3000)
