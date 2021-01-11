@@ -1,4 +1,4 @@
-import { createTaskQueue } from '../misc/index'
+import { createTaskQueue, arrified } from '../misc/index'
 let subTask = null // 要执行的子任务
 const taskQueue = createTaskQueue()
 const getFirstTask = () => {
@@ -13,8 +13,39 @@ const getFirstTask = () => {
     child: null
   }
 }
+// 构建子节点fiber
+const reconcileChildren = (fiber, children) => {
+  // 因为子元素可能是对象, 也可能是数组，统一转换成数组处理
+  const arrifiedChildren = arrified(children)
+  let index = 0
+  let element = null
+  let newFiber = null
+  let prevFiber = null
+  while (index < arrifiedChildren.length) {
+    element = arrifiedChildren[index]
+    newFiber = {
+      type: element.type,
+      props: element.props,
+      tag: 'host_component',
+      effects: [],
+      effectTag: 'placement',
+      stateNode: null,
+      parent: fiber
+    }
+    newFiber.stateNode = createStateNode(newFiber)
+    if (index == 0) {
+      fiber.child = newFiber
+    } else {
+      prevFiber.sibling = newFiber
+    }
+    prevFiber = newFiber
+    index++
+  }
+}
+// 接收任务，执行任务
 const executeTask = fiber => {
-
+  // 获取子节点fiber对象
+  reconcileChildren(fiber, fiber.props.children)
 }
 const workLoop = deadline => {
   /** 

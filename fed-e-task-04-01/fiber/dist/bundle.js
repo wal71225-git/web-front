@@ -79,6 +79,24 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/react/misc/arrified.js":
+/*!************************************!*\
+  !*** ./src/react/misc/arrified.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+var arrified = function arrified(arg) {
+  return Array.isArray(arg) ? arg : [arg];
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (arrified);
+
+/***/ }),
+
 /***/ "./src/react/misc/createTaskQueue.js":
 /*!*******************************************!*\
   !*** ./src/react/misc/createTaskQueue.js ***!
@@ -127,9 +145,12 @@ var createTaskQueue = function createTaskQueue() {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "createTaskQueue": () => /* reexport safe */ _createTaskQueue__WEBPACK_IMPORTED_MODULE_0__.default
+/* harmony export */   "createTaskQueue": () => /* reexport safe */ _createTaskQueue__WEBPACK_IMPORTED_MODULE_0__.default,
+/* harmony export */   "arrified": () => /* reexport safe */ _arrified__WEBPACK_IMPORTED_MODULE_1__.default
 /* harmony export */ });
 /* harmony import */ var _createTaskQueue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./createTaskQueue */ "./src/react/misc/createTaskQueue.js");
+/* harmony import */ var _arrified__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./arrified */ "./src/react/misc/arrified.js");
+
 
 
 
@@ -162,9 +183,46 @@ var getFirstTask = function getFirstTask() {
     effects: [],
     child: null
   };
-};
+}; // 构建子节点fiber
 
-var executeTask = function executeTask(fiber) {};
+
+var reconcileChildren = function reconcileChildren(fiber, children) {
+  // 因为子元素可能是对象, 也可能是数组，统一转换成数组处理
+  var arrifiedChildren = (0,_misc_index__WEBPACK_IMPORTED_MODULE_0__.arrified)(children);
+  var index = 0;
+  var element = null;
+  var newFiber = null;
+  var prevFiber = null;
+
+  while (index < arrifiedChildren.length) {
+    element = arrifiedChildren[index];
+    newFiber = {
+      type: element.type,
+      props: element.props,
+      tag: 'host_component',
+      effects: [],
+      effectTag: 'placement',
+      stateNode: null,
+      parent: fiber
+    };
+    newFiber.stateNode = createStateNode(newFiber);
+
+    if (index == 0) {
+      fiber.child = newFiber;
+    } else {
+      prevFiber.sibling = newFiber;
+    }
+
+    prevFiber = newFiber;
+    index++;
+  }
+}; // 接收任务，执行任务
+
+
+var executeTask = function executeTask(fiber) {
+  // 获取子节点fiber对象
+  reconcileChildren(fiber, fiber.props.children);
+};
 
 var workLoop = function workLoop(deadline) {
   /** 
