@@ -58,6 +58,125 @@ function createElement(type, props) {
 
 /***/ }),
 
+/***/ "./src/react/dom/createDOMElement.js":
+/*!*******************************************!*\
+  !*** ./src/react/dom/createDOMElement.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var _updateElementNode__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./updateElementNode */ "./src/react/dom/updateElementNode.js");
+
+/**
+ * 此方法主要用来根据虚拟dom创建dom节点
+ */
+
+var createDOMElement = function createDOMElement(virtualDOM) {
+  var newElement = null; // 判断是文本节点还是元素节点
+
+  if (virtualDOM.type === 'text') {
+    // 如果是文本节点就创建一个文本节点
+    newElement = document.createTextNode(virtualDOM.props.textContent);
+  } else {
+    // 否则创建一个元素节点
+    newElement = document.createElement(virtualDOM.type);
+    (0,_updateElementNode__WEBPACK_IMPORTED_MODULE_0__.default)(newElement, virtualDOM); // 为元素设置属性
+  }
+
+  return newElement;
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createDOMElement);
+
+/***/ }),
+
+/***/ "./src/react/dom/index.js":
+/*!********************************!*\
+  !*** ./src/react/dom/index.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createDOMElement": () => /* reexport safe */ _createDOMElement__WEBPACK_IMPORTED_MODULE_0__.default
+/* harmony export */ });
+/* harmony import */ var _createDOMElement__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./createDOMElement */ "./src/react/dom/createDOMElement.js");
+
+
+
+/***/ }),
+
+/***/ "./src/react/dom/updateElementNode.js":
+/*!********************************************!*\
+  !*** ./src/react/dom/updateElementNode.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/**
+ * 此方法主要是为元素设置属性
+ * @param {*} element 元素
+ * @param {*} virtualDOM 虚拟dom
+ */
+var updateElementNode = function updateElementNode(element, virtualDOM) {
+  var oldVirtualDOM = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  // 获取节点属性对象
+  var newProps = virtualDOM.props;
+  var oldProps = oldVirtualDOM.props || {};
+  Object.keys(newProps).forEach(function (propName) {
+    var newPropsValue = newProps[propName];
+    var oldPropsValue = oldProps[propName];
+
+    if (newPropsValue !== oldPropsValue) {
+      // 判断是否是事件属性 类似onClick -> click
+      if (propName.slice(0, 2) === 'on') {
+        // 获取事件名称
+        var eventName = propName.slice(2).toLowerCase();
+        element.addEventListener(eventName, newPropsValue); // 移除旧的事件
+
+        if (oldPropsValue) {
+          element.removeEventListener(eventName, oldPropsValue);
+        }
+      } else if (propName === "value" || propName === "checked") {
+        // 判断是否是value checked
+        element[propName] = newPropsValue;
+      } else if (propName !== "children") {
+        // 判断是否是children属性，如果不是分别处理className和一般属性
+        if (propName === 'className') {
+          element.setAttribute('class', newPropsValue);
+        } else {
+          element.setAttribute(propName, newPropsValue);
+        }
+      }
+    }
+  });
+  Object.keys(oldProps).forEach(function (propName) {
+    var newPropsValue = newProps[propName];
+    var oldPropsValue = oldProps[propName];
+
+    if (!newPropsValue) {
+      // 如果在新节点中没有，表明该属性被删除
+      // 如果是事件属性
+      if (propName.slice(0, 2) === 'on') {
+        var eventName = propName.toLowerCase().slice(2);
+        element.removeEventListener(eventName, oldPropsValue);
+      } else if (propName !== 'children') {
+        element.removeAttribute(propName);
+      }
+    }
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (updateElementNode);
+
+/***/ }),
+
 /***/ "./src/react/index.js":
 /*!****************************!*\
   !*** ./src/react/index.js ***!
@@ -94,6 +213,30 @@ var arrified = function arrified(arg) {
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (arrified);
+
+/***/ }),
+
+/***/ "./src/react/misc/createStateNode.js":
+/*!*******************************************!*\
+  !*** ./src/react/misc/createStateNode.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var _dom_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../dom/index */ "./src/react/dom/index.js");
+
+
+var createStateNode = function createStateNode(fiber) {
+  // 如果是普通元素节点，创建dom
+  if (fiber.tag === 'host_component') {
+    return (0,_dom_index__WEBPACK_IMPORTED_MODULE_0__.createDOMElement)(fiber);
+  }
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createStateNode);
 
 /***/ }),
 
@@ -146,10 +289,13 @@ var createTaskQueue = function createTaskQueue() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "createTaskQueue": () => /* reexport safe */ _createTaskQueue__WEBPACK_IMPORTED_MODULE_0__.default,
-/* harmony export */   "arrified": () => /* reexport safe */ _arrified__WEBPACK_IMPORTED_MODULE_1__.default
+/* harmony export */   "arrified": () => /* reexport safe */ _arrified__WEBPACK_IMPORTED_MODULE_1__.default,
+/* harmony export */   "createStateNode": () => /* reexport safe */ _createStateNode__WEBPACK_IMPORTED_MODULE_2__.default
 /* harmony export */ });
 /* harmony import */ var _createTaskQueue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./createTaskQueue */ "./src/react/misc/createTaskQueue.js");
 /* harmony import */ var _arrified__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./arrified */ "./src/react/misc/arrified.js");
+/* harmony import */ var _createStateNode__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./createStateNode */ "./src/react/misc/createStateNode.js");
+
 
 
 
@@ -204,8 +350,9 @@ var reconcileChildren = function reconcileChildren(fiber, children) {
       effectTag: 'placement',
       stateNode: null,
       parent: fiber
-    };
-    newFiber.stateNode = createStateNode(newFiber);
+    }; // 如果newFiber是普通元素节点stateNode存储的是dom对象，如果是组件对象存储的是实例对象
+
+    newFiber.stateNode = (0,_misc_index__WEBPACK_IMPORTED_MODULE_0__.createStateNode)(newFiber);
 
     if (index == 0) {
       fiber.child = newFiber;
@@ -213,6 +360,7 @@ var reconcileChildren = function reconcileChildren(fiber, children) {
       prevFiber.sibling = newFiber;
     }
 
+    console.log('newFiber', newFiber);
     prevFiber = newFiber;
     index++;
   }

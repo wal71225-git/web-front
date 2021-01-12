@@ -1,4 +1,4 @@
-import { createTaskQueue, arrified } from '../misc/index'
+import { createTaskQueue, arrified, createStateNode} from '../misc/index'
 let subTask = null // 要执行的子任务
 const taskQueue = createTaskQueue()
 const getFirstTask = () => {
@@ -32,12 +32,14 @@ const reconcileChildren = (fiber, children) => {
       stateNode: null,
       parent: fiber
     }
+    // 如果newFiber是普通元素节点stateNode存储的是dom对象，如果是组件对象存储的是实例对象
     newFiber.stateNode = createStateNode(newFiber)
     if (index == 0) {
       fiber.child = newFiber
     } else {
       prevFiber.sibling = newFiber
     }
+    console.log('newFiber', newFiber)
     prevFiber = newFiber
     index++
   }
