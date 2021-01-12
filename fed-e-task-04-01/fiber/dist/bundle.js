@@ -280,6 +280,28 @@ var createTaskQueue = function createTaskQueue() {
 
 /***/ }),
 
+/***/ "./src/react/misc/getTag.js":
+/*!**********************************!*\
+  !*** ./src/react/misc/getTag.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+// 获取节点tag类型
+var getTag = function getTag(vdom) {
+  // 普通节点
+  if (typeof vdom.type === 'string') {
+    return "host_component";
+  }
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getTag);
+
+/***/ }),
+
 /***/ "./src/react/misc/index.js":
 /*!*********************************!*\
   !*** ./src/react/misc/index.js ***!
@@ -290,11 +312,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "createTaskQueue": () => /* reexport safe */ _createTaskQueue__WEBPACK_IMPORTED_MODULE_0__.default,
 /* harmony export */   "arrified": () => /* reexport safe */ _arrified__WEBPACK_IMPORTED_MODULE_1__.default,
-/* harmony export */   "createStateNode": () => /* reexport safe */ _createStateNode__WEBPACK_IMPORTED_MODULE_2__.default
+/* harmony export */   "createStateNode": () => /* reexport safe */ _createStateNode__WEBPACK_IMPORTED_MODULE_2__.default,
+/* harmony export */   "getTag": () => /* reexport safe */ _getTag__WEBPACK_IMPORTED_MODULE_3__.default
 /* harmony export */ });
 /* harmony import */ var _createTaskQueue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./createTaskQueue */ "./src/react/misc/createTaskQueue.js");
 /* harmony import */ var _arrified__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./arrified */ "./src/react/misc/arrified.js");
 /* harmony import */ var _createStateNode__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./createStateNode */ "./src/react/misc/createStateNode.js");
+/* harmony import */ var _getTag__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getTag */ "./src/react/misc/getTag.js");
+
 
 
 
@@ -345,7 +370,7 @@ var reconcileChildren = function reconcileChildren(fiber, children) {
     newFiber = {
       type: element.type,
       props: element.props,
-      tag: 'host_component',
+      tag: (0,_misc_index__WEBPACK_IMPORTED_MODULE_0__.getTag)(element),
       effects: [],
       effectTag: 'placement',
       stateNode: null,
@@ -360,7 +385,6 @@ var reconcileChildren = function reconcileChildren(fiber, children) {
       prevFiber.sibling = newFiber;
     }
 
-    console.log('newFiber', newFiber);
     prevFiber = newFiber;
     index++;
   }
@@ -369,7 +393,13 @@ var reconcileChildren = function reconcileChildren(fiber, children) {
 
 var executeTask = function executeTask(fiber) {
   // 获取子节点fiber对象
-  reconcileChildren(fiber, fiber.props.children);
+  reconcileChildren(fiber, fiber.props.children); // 如果fiber有子节点，就把子元素返回给调用此方法的对象，接着生成子元素fiber，这样就完成了左侧节点树（注意不包括同级节点）
+
+  if (fiber.child) {
+    return fiber.child;
+  }
+
+  console.log(fiber);
 };
 
 var workLoop = function workLoop(deadline) {
@@ -382,6 +412,7 @@ var workLoop = function workLoop(deadline) {
   /**
    * 如果任务存在并且浏览器有空余时间就调用
    * executeTask 方法执行任务 接受任务 返回新的任务
+   * 如果subTask如果一直有任务就会一直执行
    */
 
 

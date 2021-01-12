@@ -1,4 +1,4 @@
-import { createTaskQueue, arrified, createStateNode} from '../misc/index'
+import { createTaskQueue, arrified, createStateNode, getTag} from '../misc/index'
 let subTask = null // 要执行的子任务
 const taskQueue = createTaskQueue()
 const getFirstTask = () => {
@@ -26,7 +26,7 @@ const reconcileChildren = (fiber, children) => {
     newFiber = {
       type: element.type,
       props: element.props,
-      tag: 'host_component',
+      tag: getTag(element),
       effects: [],
       effectTag: 'placement',
       stateNode: null,
@@ -39,7 +39,6 @@ const reconcileChildren = (fiber, children) => {
     } else {
       prevFiber.sibling = newFiber
     }
-    console.log('newFiber', newFiber)
     prevFiber = newFiber
     index++
   }
@@ -48,6 +47,11 @@ const reconcileChildren = (fiber, children) => {
 const executeTask = fiber => {
   // 获取子节点fiber对象
   reconcileChildren(fiber, fiber.props.children)
+  // 如果fiber有子节点，就把子元素返回给调用此方法的对象，接着生成子元素fiber，这样就完成了左侧节点树（注意不包括同级节点）
+  if (fiber.child) {
+    return fiber.child
+  }
+  console.log(fiber)
 }
 const workLoop = deadline => {
   /** 
@@ -59,6 +63,7 @@ const workLoop = deadline => {
   /**
    * 如果任务存在并且浏览器有空余时间就调用
    * executeTask 方法执行任务 接受任务 返回新的任务
+   * 如果subTask如果一直有任务就会一直执行
    */
   while (subTask && deadline.timeRemaining() > 1) {
     subTask = executeTask(subTask)
