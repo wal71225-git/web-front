@@ -1,6 +1,14 @@
 import { createTaskQueue, arrified, createStateNode, getTag} from '../misc/index'
 let subTask = null // 要执行的子任务
+let pendingCommit = null // 要执行的任务
 const taskQueue = createTaskQueue()
+const commitAllWork = fiber => {
+  fiber.effects.forEach(item => {
+    if (item.effectTag === "placement") {
+      item.parent.stateNode.appendChild(item.stateNode)
+    }
+  })
+}
 const getFirstTask = () => {
   // 从队列中获取任务
   const task = taskQueue.pop()
@@ -51,7 +59,22 @@ const executeTask = fiber => {
   if (fiber.child) {
     return fiber.child
   }
-  console.log(fiber)
+    /**
+   * 如果存在同级 返回同级 构建同级的子级
+   * 如果同级不存在 返回到父级 看父级是否有同级
+   */
+  let currentExecutelyFiber = fiber
+  while(currentExecutelyFiber.parent) {
+    currentExecutelyFiber.parent.effects = currentExecutelyFiber.parent.effects.concat(
+      currentExecutelyFiber.effects.concat([currentExecutelyFiber])
+    )
+      // 有同级节点就返回同级节点，否则返回父级节点
+    if(currentExecutelyFiber.sibling) {
+      return currentExecutelyFiber.sibling
+    }
+    currentExecutelyFiber = currentExecutelyFiber.parent
+  }
+  pendingCommit = currentExecutelyFiber
 }
 const workLoop = deadline => {
   /** 
@@ -67,6 +90,9 @@ const workLoop = deadline => {
    */
   while (subTask && deadline.timeRemaining() > 1) {
     subTask = executeTask(subTask)
+  }
+  if(pendingCommit) {
+    commitAllWork(pendingCommit)
   }
 }
 const performTask = deadline => {

@@ -341,7 +341,17 @@ __webpack_require__.r(__webpack_exports__);
 
 var subTask = null; // 要执行的子任务
 
+var pendingCommit = null; // 要执行的任务
+
 var taskQueue = (0,_misc_index__WEBPACK_IMPORTED_MODULE_0__.createTaskQueue)();
+
+var commitAllWork = function commitAllWork(fiber) {
+  fiber.effects.forEach(function (item) {
+    if (item.effectTag === "placement") {
+      item.parent.stateNode.appendChild(item.stateNode);
+    }
+  });
+};
 
 var getFirstTask = function getFirstTask() {
   // 从队列中获取任务
@@ -398,8 +408,25 @@ var executeTask = function executeTask(fiber) {
   if (fiber.child) {
     return fiber.child;
   }
+  /**
+  * 如果存在同级 返回同级 构建同级的子级
+  * 如果同级不存在 返回到父级 看父级是否有同级
+  */
 
-  console.log(fiber);
+
+  var currentExecutelyFiber = fiber;
+
+  while (currentExecutelyFiber.parent) {
+    currentExecutelyFiber.parent.effects = currentExecutelyFiber.parent.effects.concat(currentExecutelyFiber.effects.concat([currentExecutelyFiber])); // 有同级节点就返回同级节点，否则返回父级节点
+
+    if (currentExecutelyFiber.sibling) {
+      return currentExecutelyFiber.sibling;
+    }
+
+    currentExecutelyFiber = currentExecutelyFiber.parent;
+  }
+
+  pendingCommit = currentExecutelyFiber;
 };
 
 var workLoop = function workLoop(deadline) {
@@ -418,6 +445,10 @@ var workLoop = function workLoop(deadline) {
 
   while (subTask && deadline.timeRemaining() > 1) {
     subTask = executeTask(subTask);
+  }
+
+  if (pendingCommit) {
+    commitAllWork(pendingCommit);
   }
 };
 
