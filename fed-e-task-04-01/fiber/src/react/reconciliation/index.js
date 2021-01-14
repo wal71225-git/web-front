@@ -4,8 +4,15 @@ let pendingCommit = null // 要执行的任务
 const taskQueue = createTaskQueue()
 const commitAllWork = fiber => {
   fiber.effects.forEach(item => {
-    if (item.effectTag === "placement") {
-      item.parent.stateNode.appendChild(item.stateNode)
+    if (item.effectTag === "placement") { // 向页面中添加节点
+      let fiber = item // 当前要添加的子节点
+      let parentFiber = item.parent // 当前追加子节点的父级节点
+      while(parentFiber.tag === 'class_component' || parentFiber.tag === 'function_component') {
+        parentFiber = parentFiber.parent
+      }
+      if(fiber.tag === 'host_component') {
+        parentFiber.stateNode.appendChild(fiber.stateNode)
+      }
     }
   })
 }
@@ -48,13 +55,19 @@ const reconcileChildren = (fiber, children) => {
       prevFiber.sibling = newFiber
     }
     prevFiber = newFiber
-    index++
+    index++ 
   }
 }
 // 接收任务，执行任务
 const executeTask = fiber => {
   // 获取子节点fiber对象
-  reconcileChildren(fiber, fiber.props.children)
+  if(fiber.tag === 'class_component') {
+    reconcileChildren(fiber, fiber.stateNode.render())
+  } else if (fiber.tag === 'function_component') {
+    reconcileChildren(fiber, fiber.stateNode(fiber.props))
+  } else {
+    reconcileChildren(fiber, fiber.props.children)
+  }
   // 如果fiber有子节点，就把子元素返回给调用此方法的对象，接着生成子元素fiber，这样就完成了左侧节点树（注意不包括同级节点）
   if (fiber.child) {
     return fiber.child
