@@ -1,16 +1,49 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { createStore } from 'redux'
+const initState = {
+  count: 0
+}
+/**
+ * 
+ * @param {*} state 状态
+ * @param {*} action 状态描述
+ */
+function reducer(state = initState, action) {
+  switch(action.type) {
+    case 'increment':
+    return {
+      count: state.count +1
+    }
+    case 'decrement':
+    return {
+      count: state.count - 1
+    }
+    default:
+      return state
+  }
+}
+// store默认接收一个reducer函数
+const store = createStore(reducer)
 
+const increment = { type : 'increment' }
+const decrement = { type : 'decrement' }
+// 创建函数组件
+function Counter() {
+  return <div>
+    <button onClick={() => { store.dispatch(increment)}}>+</button>
+    <span>{store.getState().count}</span>
+    <button onClick={() => { store.dispatch(decrement)}}>-</button>
+  </div>
+}
+store.subscribe(() => {
+  console.log(store.getState())
+  ReactDOM.render( 
+    <Counter />,
+    document.getElementById('root')
+  )
+})
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <Counter/>,
   document.getElementById('root')
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+)
