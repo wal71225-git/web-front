@@ -1,13 +1,21 @@
 import { connect } from 'react-redux'
 // 创建函数组件
-function Counter({count, dispatch}) {
+function Counter({count, increment, decrement}) {
   return <div>
-    <button onClick={() => { dispatch({ type : 'increment' })}}>+</button>
+    <button onClick={ increment }>+</button>
     <span>{count}</span>
-    <button onClick={() => { dispatch({ type : 'decrement' })}}>-</button>
+    <button onClick={ decrement }>-</button>
   </div>
 }
 const mapStateToProps = state => ({
   count: state.count
 })
-export default connect(mapStateToProps)(Counter)
+const mapDispatchToProps = dispatch => ({
+  increment() {
+    dispatch({ type : 'increment' })
+  },
+  decrement() {
+    dispatch({ type : 'decrement' })
+  }
+})
+export default connect(mapStateToProps,mapDispatchToProps)(Counter)
