@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import Counter from './components/Counter'
 const initState = {
   count: 0
 }
@@ -26,24 +28,24 @@ function reducer(state = initState, action) {
 // store默认接收一个reducer函数
 const store = createStore(reducer)
 
-const increment = { type : 'increment' }
-const decrement = { type : 'decrement' }
+// const increment = { type : 'increment' }
+// const decrement = { type : 'decrement' }
 // 创建函数组件
-function Counter() {
-  return <div>
-    <button onClick={() => { store.dispatch(increment)}}>+</button>
-    <span>{store.getState().count}</span>
-    <button onClick={() => { store.dispatch(decrement)}}>-</button>
-  </div>
-}
-store.subscribe(() => {
-  console.log(store.getState())
-  ReactDOM.render( 
-    <Counter />,
-    document.getElementById('root')
-  )
-})
+// function Counter() {
+//   return <div>
+//     <button onClick={() => { store.dispatch(increment)}}>+</button>
+//     <span>{store.getState().count}</span>
+//     <button onClick={() => { store.dispatch(decrement)}}>-</button>
+//   </div>
+// }
+// store.subscribe(() => {
+//   console.log(store.getState())
+//   ReactDOM.render( 
+//     <Counter />,
+//     document.getElementById('root')
+//   )
+// })
 ReactDOM.render(
-  <Counter/>,
+  <Provider store={store}><Counter/></Provider>,
   document.getElementById('root')
 )
