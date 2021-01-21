@@ -4,9 +4,9 @@ import * as counterActions from '../store/actions/counter.action'
 // 创建函数组件
 function Counter({count, increment, decrement}) {
   return <div>
-    <button onClick={ increment }>+</button>
+    <button onClick={ () => increment(5) }>+</button>
     <span>{count}</span>
-    <button onClick={ decrement }>-</button>
+    <button onClick={ () => decrement(5) }>-</button>
   </div>
 }
 const mapStateToProps = state => ({
