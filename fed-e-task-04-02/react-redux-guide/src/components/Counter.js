@@ -1,4 +1,6 @@
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as counterActions from '../store/actions/counter.action'
 // 创建函数组件
 function Counter({count, increment, decrement}) {
   return <div>
@@ -11,11 +13,6 @@ const mapStateToProps = state => ({
   count: state.count
 })
 const mapDispatchToProps = dispatch => ({
-  increment() {
-    dispatch({ type : 'increment' })
-  },
-  decrement() {
-    dispatch({ type : 'decrement' })
-  }
+  ...bindActionCreators(counterActions, dispatch)
 })
 export default connect(mapStateToProps,mapDispatchToProps)(Counter)

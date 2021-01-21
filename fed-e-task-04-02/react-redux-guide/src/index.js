@@ -1,32 +1,32 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore } from 'redux'
 import { Provider } from 'react-redux'
+import store from './store/index'
 import Counter from './components/Counter'
-const initState = {
-  count: 0
-}
-/**
- * 
- * @param {*} state 状态
- * @param {*} action 状态描述
- */
-function reducer(state = initState, action) {
-  switch(action.type) {
-    case 'increment':
-    return {
-      count: state.count +1
-    }
-    case 'decrement':
-    return {
-      count: state.count - 1
-    }
-    default:
-      return state
-  }
-}
-// store默认接收一个reducer函数
-const store = createStore(reducer)
+// const initState = {
+//   count: 0
+// }
+// /**
+//  * 
+//  * @param {*} state 状态
+//  * @param {*} action 状态描述
+//  */
+// function reducer(state = initState, action) {
+//   switch(action.type) {
+//     case 'increment':
+//     return {
+//       count: state.count +1
+//     }
+//     case 'decrement':
+//     return {
+//       count: state.count - 1
+//     }
+//     default:
+//       return state
+//   }
+// }
+// // store默认接收一个reducer函数
+// const store = createStore(reducer)
 
 // const increment = { type : 'increment' }
 // const decrement = { type : 'decrement' }
