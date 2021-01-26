@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'
 import store from './store/index'
-import Counter from './components/Counter'
+import App from './App'
 // const initState = {
 //   count: 0
 // }
@@ -46,6 +46,6 @@ import Counter from './components/Counter'
 //   )
 // })
 ReactDOM.render(
-  <Provider store={store}><Counter/></Provider>,
+  <Provider store={store}><App /></Provider>,
   document.getElementById('root')
 )

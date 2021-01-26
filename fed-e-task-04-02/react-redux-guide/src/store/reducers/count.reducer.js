@@ -1,6 +1,7 @@
 import { INCREMENT, DECREMENT } from '../const/index'
 const initState = {
-  count: 0
+  count: 0,
+  show: true
 }
 /**
  * 
