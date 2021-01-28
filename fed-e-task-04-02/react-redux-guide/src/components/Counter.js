@@ -9,8 +9,8 @@ function Counter({count, increment, decrement}) {
     <button onClick={ () => decrement(5) }>-</button>
   </div>
 }
-const mapStateToProps = state => ({
-  count: state.count
+const mapStateToProps = ({ counter }) => ({
+  count: counter.count
 })
 const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(counterActions, dispatch)

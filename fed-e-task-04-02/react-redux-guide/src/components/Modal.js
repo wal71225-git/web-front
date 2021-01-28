@@ -18,8 +18,8 @@ function Modal({showState, showModal, hideModal}) {
     <div style={styles}></div>
   </div>
 }
-const mapStateToProps = state => ({
-  showState: state.show
+const mapStateToProps = ({ modal }) => ({
+  showState: modal.show
 })
 const mapDispatchToProps = dispatch => bindActionCreators(modalActions,dispatch)
 export default connect(mapStateToProps,mapDispatchToProps)(Modal)
