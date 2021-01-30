@@ -2,9 +2,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as counterActions from '../store/actions/counter.action'
 // 创建函数组件
-function Counter({count, increment, decrement}) {
+function Counter({count, increment, decrement, increment_async}) {
   return <div>
-    <button onClick={ () => increment(5) }>+</button>
+    <button onClick={ () => increment_async(5) }>+</button>
     <span>{count}</span>
     <button onClick={ () => decrement(5) }>-</button>
   </div>
