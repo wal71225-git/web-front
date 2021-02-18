@@ -14,6 +14,10 @@ class App extends Component {
                <span>{counter.count}</span>
                <button onClick={counter.decrement}>-</button>
                <span>{counter.getResult}</span>
+               <div>
+                 <input value={counter.userName} onChange={e => counter.changeUser(e.target.value)}/>
+                 <span>{counter.userName}</span>
+               </div>
                {
                  counter.users.map(user => (
                    <div key={user.id}>
