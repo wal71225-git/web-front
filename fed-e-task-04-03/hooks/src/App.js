@@ -1,11 +1,10 @@
-import './App.css';
-import React, { useState } from 'react'
+
+import React from 'react'
+import TestState from './component/UseState'
 function App() {
-  const [c, setC] = useState(0)
   return (
     <div className="App">
-      <span>{c}</span>
-      <button onClick={()=>setC(c +1)}>+1</button>
+      <div><TestState /></div>
     </div>
   );
 }
