@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { ChakraProvider, CSSReset } from '@chakra-ui/react'
+import { Box, ChakraProvider, CSSReset } from '@chakra-ui/react'
  import theme from '@chakra-ui/theme'
 
 ReactDOM.render(
    <ChakraProvider theme={theme}>
      <CSSReset></CSSReset>
-      <App />
+      <Box h="1000px" bgColor='#f1f1f1'>
+       <App />
+      </Box>
    </ChakraProvider>,
   document.getElementById('root')
 );

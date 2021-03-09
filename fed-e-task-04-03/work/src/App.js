@@ -1,9 +1,11 @@
+import { Box } from '@chakra-ui/react'
+// import theme from '@chakra-ui/theme'
 import Login from './components/login/index'
 function App() {
   return (
-    <div className="App">
+    <Box w="100%">
       <Login />
-    </div>
+    </Box>
   );
 }
 

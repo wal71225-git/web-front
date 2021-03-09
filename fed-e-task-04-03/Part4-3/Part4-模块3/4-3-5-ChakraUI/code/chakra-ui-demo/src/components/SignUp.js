@@ -47,7 +47,7 @@ export default function SignUp() {
           <Switch id="deal" mr="3" />
           <FormLabel htmlFor="deal">是否同意协议</FormLabel>
         </Flex>
-        <Button _hover={{ bgColor: "tomato" }} w="100%" colorScheme="teal">
+        <Button mt={4} _hover={{ bgColor: "tomato" }} w="100%" colorScheme="teal" fontSize="14px">
           注册
         </Button>
       </Stack>
