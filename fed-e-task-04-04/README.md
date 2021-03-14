@@ -1,4 +1,7 @@
-### 1. 创建项目
+### 暂时跳过此节
+
+
+
 ` npm init next-app react-next-movie`
 
 
